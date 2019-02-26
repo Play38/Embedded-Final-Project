@@ -120,7 +120,19 @@
 #pragma udata
 //You can define Global Data Elements here
 unsigned char RA0='0', RA1='1', RA2='2', RA3='3';
- 
+typedef struct{
+	int day;
+	int month;
+	int year;
+} date;
+typedef struct{
+	int second;
+	int minute;
+	int hour;
+} time;
+time Time;
+date Date;
+int timeflag = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -210,10 +222,171 @@ BOOL CheckButtonPressed(void);
   #pragma interrupt YourHighPriorityISRCode
   void YourHighPriorityISRCode()
   {
-    //Check which interrupt flag caused the interrupt.
-    //Service the interrupt
-    //Clear the interrupt flag
-    //Etc.
+    Time.second++;
+
+	if(Time.second == 60)
+	{
+		Time.second = 0;
+		Time.minute++;
+	}
+
+	if(Time.minute == 60)
+	{
+		Time.minute = 0;
+		Time.hour++;
+	}
+	
+	if(Time.hour == 24)
+	{
+		Time.hour = 0;
+		timeflag = 1;
+	}
+
+
+	if (timeflag)
+	{
+		
+		switch(Date.month)
+		{
+			case 1:
+			{
+				if(Date.day == 31)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+					
+			}
+			case 2:
+			{
+				if(Date.day == 28)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 3:
+			{
+				if(Date.day == 31)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 4:
+			{
+				if(Date.day == 30)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 5:
+			{
+				if(Date.day == 31)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 6:
+			{
+				if(Date.day == 30)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 7:
+			{
+				if(Date.day == 31)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 8:
+			{
+				if(Date.day == 31)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 9:
+			{
+				if(Date.day == 30)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 10:
+			{
+				if(Date.day == 31)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 11:
+			{
+				if(Date.day == 30)
+				{
+					Date.month++;
+					Date.day = 1;
+				}
+				else
+					Date.day++;
+				break;
+			}
+			case 12:
+			{
+				if(Date.day == 31)
+				{
+					Date.month = 1;
+					Date.day = 1;
+					Date.year++;
+				}
+				else
+					Date.day++;
+				break;
+			}
+
+		}
+		timeflag = 0;
+	}
+	INTCONbits.TMR0IF = 0 ;
  
   } //This return will be a "retfie fast", since this is in a #pragma interrupt section
   #pragma interruptlow YourLowPriorityISRCode
@@ -420,114 +593,10 @@ void clearScreen0(){
 		oledPutROMString("                                 ", i, 0); 
 	}
 }
-void opscreen(int num)
-{
-    int i;
-	va_list check;
-	clearScreen0();
-	while(1)
-	{
-    	sprintf(toprint,"Operation %d done", num);
-    	oledPutString(toprint, 0, 0,1);  
-    	sprintf(toprint,"Press up to return");
-    	oledPutString(toprint, 1, 0,1);  
- 	
-  		if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)
-		{
-			clearScreen0();
-			return 0;
-		}	
 
-
-	}
-}
-
-void subsubMenu1()
-{
-    int i , z;
-	int currChoice=1;
-	clearScreen();
-	while(1)
-	{
-    	sprintf(toprint,"Sub Sub menu 1");
-    	oledPutString(toprint, 0, 0,1);  
-   
- 	
-    	for(i=1;i<6;i++)
-    	{
-	    	sprintf(toprint, "Make operation %d",i+4);
-	    	if(i == currChoice)oledPutString(toprint, i ,2*6,0);
-	   		else oledPutString(toprint, i ,2*6,1);	
-    	}
-		
-	
-    	if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
-			if(currChoice > 1) currChoice--;
- 
-    	if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
- 			if(currChoice < 5) currChoice++;
-
-		if( GetAccVal('y') > -140 && GetAccVal('y') > 140 ) // shake to return to menu1
-		{
-			DelayMs(100);
-			clearScreen0();
-			return 0;
-		}
-		if( CheckLRVolt(mTouchReadButton(RA0))) // tilting the device to select executing
-			opscreen(currChoice+4);	
- 		DelayMs(60);
-	}
-}
-
-void subMenu1()
-{
-    int i , z;
-	int currChoice=1;
-	clearScreen();
-	while(1)
-	{
-    	sprintf(toprint,"Sub menu 1");
-    	oledPutString(toprint, 0, 0,1);  
-   
- 	
-    	for(i=1;i<6;i++)
-    	{
-			if(i==5) sprintf(toprint, "SubSubMenu");
-	    	else sprintf(toprint, "Make operation %d",i);
-	    	if(i == currChoice)oledPutString(toprint, i ,2*6,0);
-	   		else oledPutString(toprint, i ,2*6,1);	
-    	}
-		
-
-    	if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
-			if(currChoice > 1) currChoice--;
-
-    	if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
- 			if(currChoice < 5) currChoice++;
-
-		if( GetAccVal('y') > -140 && GetAccVal('y') > 140 ) // shake to return to main menu
-		{
-			clearScreen0();
-			return 0;
-		}
-		if( CheckLRVolt(mTouchReadButton(RA0))) // R to choose
-			if ( currChoice != 5)
-				opscreen(currChoice);
-			else
-			{
-				DelayMs(100);
-				subsubMenu1();
-			}
-		
- 		DelayMs(60);
-	}
-}
-
-
-
-void mainTraverse(int c){
+void setTraverse(int c){
 	switch(c){
-		case 1: subMenu1();break;
+		//case 1: subMenu1();break;
 		//case 2: subMenu2();break;
 		//case 3: subMenu3();break;
 		//case 4: subMenu4();break;
@@ -580,7 +649,7 @@ void setMenu() //potenciometer
 		return 0;
 		}
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
-				opscreen(currChoice);
+			//	opscreen(currChoice);
 		
  		DelayMs(60);
 	}
@@ -588,13 +657,27 @@ void setMenu() //potenciometer
  
 void clockScreen()
 {  
-    int i, up, down;
+    int i, up, down;	
 	int currChoice=1;
+	int timeprint;
 	clearScreen0();
 	while(1)
 	{
-    	sprintf(toprint,"Main menu");
-    	//oledPutString(toprint, 0, 0,1);  
+    	//sprintf(toprint,"Main menu");
+    	//oledPutString(toprint, 0, 0,1);
+		//sprintf(toprint, Time.second);
+		sprintf(timeprint, "%2d", Time.second);
+		oledPutString(timeprint, 4 ,2*40,1);
+		sprintf(timeprint, "%2d", Time.minute);
+		oledPutString(timeprint, 4 ,2*30,1);
+		sprintf(timeprint, "%2d", Time.hour);
+		oledPutString(timeprint, 4 ,2*20,1);  
+		sprintf(timeprint, "%2d", Date.year);
+		oledPutString(timeprint, 2 ,2*40,1);
+		sprintf(timeprint, "%2d", Date.month);
+		oledPutString(timeprint, 2 ,2*30,1);
+		sprintf(timeprint, "%2d", Date.day);
+		oledPutString(timeprint, 2 ,2*20,1);  
    
  	
     /*	for(i=1;i<5;i++)
@@ -615,15 +698,35 @@ void clockScreen()
 			if(CheckButtonPressed())
 				setMenu();
 
- 		DelayMs(60);
 	}
 }
 
 void main(void)
 {
     InitializeSystem();
+
+	Date.day=1;
+	Date.month=1;
+	Date.year=2000;
+	Time.second=0;
+	Time.minute=0;
+	Time.hour=0;
+
+	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
+	T0CONbits.T0CS = 0 ;			//Clock Source -- Internal
+	T0CONbits.PSA = 0 ;				//Use Pre-Scaler
+	T0CONbits.T0PS = 7 ;			//Prescale 1:256
+	T0CONbits.TMR0ON = 1 ;			//Set Timer to ON
+
+	RCONbits.IPEN = 1 ;				//Use Priority Interrutps
+	INTCON2bits.T0IP = 1 ;			//Timer0 High-Priority
+
+	INTCONbits.GIE = 1 ;			//Enable Interrupts
+	INTCONbits.PEIE = 1 ;
+	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enabled
 	clockScreen();
     //mainMenu();
+	
     while(1)                            //Main is Usualy an Endless Loop
     {}      
 }//end main
