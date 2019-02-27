@@ -133,6 +133,8 @@ typedef struct{
 time Time;
 date Date;
 int timeflag = 0;
+int interval_24 = 1;
+int PM;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -222,171 +224,173 @@ BOOL CheckButtonPressed(void);
   #pragma interrupt YourHighPriorityISRCode
   void YourHighPriorityISRCode()
   {
-    Time.second++;
-
-	if(Time.second == 60)
+	if(INTCONbits.T0IF)
 	{
-		Time.second = 0;
-		Time.minute++;
-	}
-
-	if(Time.minute == 60)
-	{
-		Time.minute = 0;
-		Time.hour++;
-	}
+    	Time.second++;
 	
-	if(Time.hour == 24)
-	{
-		Time.hour = 0;
-		timeflag = 1;
-	}
-
-
-	if (timeflag)
-	{
-		
-		switch(Date.month)
+		if(Time.second == 60)
 		{
-			case 1:
-			{
-				if(Date.day == 31)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-					
-			}
-			case 2:
-			{
-				if(Date.day == 28)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 3:
-			{
-				if(Date.day == 31)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 4:
-			{
-				if(Date.day == 30)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 5:
-			{
-				if(Date.day == 31)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 6:
-			{
-				if(Date.day == 30)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 7:
-			{
-				if(Date.day == 31)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 8:
-			{
-				if(Date.day == 31)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 9:
-			{
-				if(Date.day == 30)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 10:
-			{
-				if(Date.day == 31)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 11:
-			{
-				if(Date.day == 30)
-				{
-					Date.month++;
-					Date.day = 1;
-				}
-				else
-					Date.day++;
-				break;
-			}
-			case 12:
-			{
-				if(Date.day == 31)
-				{
-					Date.month = 1;
-					Date.day = 1;
-					Date.year++;
-				}
-				else
-					Date.day++;
-				break;
-			}
-
+			Time.second = 0;
+			Time.minute++;
 		}
-		timeflag = 0;
-	}
+
+		if(Time.minute == 60)
+		{
+			Time.minute = 0;
+			Time.hour++;
+		}
+	
+		if(Time.hour == 24)
+		{
+			Time.hour = 0;
+			timeflag = 1;
+		}
+
+
+		if (timeflag)
+		{
+		
+			switch(Date.month)
+			{
+				case 1:
+				{
+					if(Date.day == 31)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+					
+				}
+				case 2:
+				{
+					if(Date.day == 28)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 3:
+				{
+					if(Date.day == 31)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 4:
+				{
+					if(Date.day == 30)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 5:
+				{
+					if(Date.day == 31)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 6:
+				{
+					if(Date.day == 30)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 7:
+				{
+					if(Date.day == 31)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 8:
+				{
+					if(Date.day == 31)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 9:
+				{
+					if(Date.day == 30)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 10:
+				{
+					if(Date.day == 31)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 11:
+				{
+					if(Date.day == 30)
+					{
+						Date.month++;
+						Date.day = 1;
+					}
+					else
+						Date.day++;
+					break;
+				}
+				case 12:
+				{
+					if(Date.day == 31)
+					{
+						Date.month = 1;
+						Date.day = 1;
+						Date.year++;
+					}
+					else
+						Date.day++;
+					break;
+				}
+			}
+			timeflag = 0;
+		}
 	INTCONbits.TMR0IF = 0 ;
+	}
  
   } //This return will be a "retfie fast", since this is in a #pragma interrupt section
   #pragma interruptlow YourLowPriorityISRCode
@@ -594,10 +598,51 @@ void clearScreen0(){
 	}
 }
 
+void IntervalMenu() //potenciometer
+{
+    int i , z, pot;
+	int currChoice=1;
+	clearScreen();
+	while(1)
+	{
+    	sprintf(toprint,"Select interval");
+    	oledPutString(toprint, 0, 0,1);  
+ 	
+		
+
+		pot = GetA2D();
+		if(pot < 511)
+			currChoice=1;
+		else if(pot > 511 && pot < 1023)
+			currChoice=2;
+
+		sprintf(toprint, "24h mode");
+		if(currChoice == 1)oledPutString(toprint, 1 ,2*6,0);
+	   		else oledPutString(toprint, 1 ,2*6,1);
+		sprintf(toprint, "12h mode");
+		if(currChoice == 2)oledPutString(toprint, 2 ,2*6,0);
+	   		else oledPutString(toprint, 2 ,2*6,1);
+
+		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+		{
+		clearScreen0();
+		return 0;
+		}
+		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+			{
+				if(currChoice == 1)
+					interval_24 = 1;
+				else if( currChoice == 2)
+					interval_24 = 0;
+			}
+		
+ 		DelayMs(60);
+	}
+}
 void setTraverse(int c){
 	switch(c){
 		//case 1: subMenu1();break;
-		//case 2: subMenu2();break;
+		case 2: IntervalMenu();break;
 		//case 3: subMenu3();break;
 		//case 4: subMenu4();break;
 		default: break;
@@ -649,7 +694,7 @@ void setMenu() //potenciometer
 		return 0;
 		}
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
-			//	opscreen(currChoice);
+			setTraverse(currChoice);
 		
  		DelayMs(60);
 	}
@@ -670,8 +715,30 @@ void clockScreen()
 		oledPutString(timeprint, 4 ,2*40,1);
 		sprintf(timeprint, "%2d", Time.minute);
 		oledPutString(timeprint, 4 ,2*30,1);
-		sprintf(timeprint, "%2d", Time.hour);
-		oledPutString(timeprint, 4 ,2*20,1);  
+
+		if(interval_24)
+		{
+			sprintf(timeprint, "%2d", Time.hour);
+			oledPutString(timeprint, 4 ,2*20,1); 
+		}
+		else
+		{
+			if(Time.hour>=13 && Time.hour <=23)
+				sprintf(timeprint, "%2d", (Time.hour % 2));
+			oledPutString(timeprint, 4 ,2*20,1); 
+			
+			if(Time.hour>=0 && Time.hour <=11)
+			{
+				sprintf(toprint,"AM");
+				oledPutString(toprint, 5 ,2*6,1);
+			}
+			else
+			{
+				sprintf(toprint,"PM");
+				oledPutString(toprint, 5 ,2*6,1);
+			}
+		}	
+ 
 		sprintf(timeprint, "%2d", Date.year);
 		oledPutString(timeprint, 2 ,2*40,1);
 		sprintf(timeprint, "%2d", Date.month);
@@ -710,9 +777,9 @@ void main(void)
 	Date.year=2000;
 	Time.second=0;
 	Time.minute=0;
-	Time.hour=0;
+	Time.hour=1;
 
-	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
+/*	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
 	T0CONbits.T0CS = 0 ;			//Clock Source -- Internal
 	T0CONbits.PSA = 0 ;				//Use Pre-Scaler
 	T0CONbits.T0PS = 7 ;			//Prescale 1:256
@@ -723,7 +790,17 @@ void main(void)
 
 	INTCONbits.GIE = 1 ;			//Enable Interrupts
 	INTCONbits.PEIE = 1 ;
-	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enabled
+	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enable
+*/
+
+	T0CON = 0x07 ;
+	// Initialize Timer Interrupt
+	RCONbits.IPEN = 1 ;			//Prio Enable
+	INTCON2bits.TMR0IP = 1 ;	//Use Hi-Prio
+	INTCON = 0xE0 ;				//Enable Timer Interrupt
+
+	T0CON |= 0x80;				//Start the Timer
+	
 	clockScreen();
     //mainMenu();
 	
