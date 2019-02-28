@@ -595,7 +595,29 @@ void clearScreen0(){
 		oledPutROMString("                                 ", i, 0); 
 	}
 }
+void menuClock(time t)
+{
+		int timeprint;
 
+		sprintf(timeprint, "%2d", t.second);
+		oledPutString(timeprint, 0 ,2*58,1);
+		sprintf(timeprint, "%2d", t.minute);
+		oledPutString(timeprint, 0 ,2*48,1);
+
+		if(interval_24)
+		{
+			sprintf(timeprint, "%2d", t.hour);
+			oledPutString(timeprint, 0 ,2*38,1); 
+		}
+		else
+		{
+			if(Time.hour>=13 && t.hour <=23)
+				sprintf(timeprint, "%2d", (t.hour % 2));
+			oledPutString(timeprint, 0 ,2*38,1); 
+
+		}	
+
+}
 void IntervalMenu() //potenciometer
 {
     int i , z, pot;
@@ -814,7 +836,7 @@ void clockScreen()
 	while(1)
 	{
 		digClock(Time);
- 
+ 		menuClock(Time);
 		if(CheckButtonPressed())
 			DelayMs(200);
 			if(CheckButtonPressed())
