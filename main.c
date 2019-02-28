@@ -135,7 +135,7 @@ date Date;
 int timeflag = 0;
 int interval_24 = 1;
 int AM = 0;
-int alarmflag = 0;
+int alarmflag, alarmcount = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -225,10 +225,23 @@ BOOL CheckButtonPressed(void);
   #pragma interrupt YourHighPriorityISRCode
   void YourHighPriorityISRCode()
   {
+	static char disp=0 ;
 	if(INTCONbits.T0IF)
 	{
-    	Time.second++;
-	
+		if(alarmflag && Time.hour == Alarm.hour && Time.minute == Alarm.minute)
+		{
+			if (alarmcount == 19)
+			{
+				alarmflag = 0;
+				alarmcount = 0;
+			}
+			WriteCommand(disp ? 0xA6 : 0xA7) ;	//Change Display
+			disp = !disp ;
+			alarmcount++;
+			
+		}
+		
+		Time.second++;
 		if(Time.second == 60)
 		{
 			Time.second = 0;
@@ -549,10 +562,10 @@ int CheckLRVolt(unsigned int x){
 }
  
 int CheckUDVolt(unsigned int x,unsigned int y){
-    if(x<y && y-x>75 && x < 900){
+    if(x<y && y-x>75 && x < 600){
         return 1;       //Up
 	}
-    else if (y<x && x-y>75 && y < 800){ 
+    else if (y<x && x-y>120 && y < 600){ 
 		return 2;}       //Down
    else return 0;   //Not pushed
 }
@@ -932,7 +945,17 @@ void clockScreen()
 			sprintf(toprint,"A");
     		oledPutString(toprint, 2, 5*3,1);
 		}
+		else
+		{
+			sprintf(toprint," ");
+    		oledPutString(toprint, 2, 5*3,1);
+		}
 		digClock(Time, 0);
+		
+		if(CheckButtonPressed())
+			alarmflag = 0; // dunno how to distinguish between those 2 presses
+		
+
 		if(CheckButtonPressed())
 			DelayMs(200);
 			if(CheckButtonPressed())
@@ -956,10 +979,8 @@ void main(void)
 	T0CONbits.PSA = 0 ;				//Use Pre-Scaler
 	T0CONbits.T0PS = 7 ;			//Prescale 1:256
 	T0CONbits.TMR0ON = 1 ;			//Set Timer to ON
-
 	RCONbits.IPEN = 1 ;				//Use Priority Interrutps
 	INTCON2bits.T0IP = 1 ;			//Timer0 High-Priority
-
 	INTCONbits.GIE = 1 ;			//Enable Interrupts
 	INTCONbits.PEIE = 1 ;
 	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enable
