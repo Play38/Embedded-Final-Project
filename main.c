@@ -133,7 +133,7 @@ time Time;
 date Date;
 int timeflag = 0;
 int interval_24 = 1;
-int PM;
+int AM = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -611,9 +611,20 @@ void menuClock(time t)
 		}
 		else
 		{
-			if(Time.hour>=13 && t.hour <=23)
+			if(t.hour>=13 && t.hour <=23)
 				sprintf(timeprint, "%02d", (t.hour % 2));
-			oledPutString(timeprint, 0 ,2*38,1); 
+			oledPutString(timeprint, 0 ,2*38,1);
+
+			if(t.hour>=0 && t.hour <=11)
+			{
+				sprintf(toprint,"AM");
+				oledPutString(toprint, 0 ,2*30,1);
+			}
+			else
+			{
+				sprintf(toprint,"PM");
+				oledPutString(toprint, 0 ,2*30,1);
+			} 
 
 		}
 				sprintf(toprint,":");
@@ -628,7 +639,7 @@ void IntervalMenu() //potenciometer
 	clearScreen();
 	while(1)
 	{
-    	sprintf(toprint,"Select interval");
+    	sprintf(toprint,"Interval");
     	oledPutString(toprint, 0, 0,1);  
  	
 		
@@ -678,11 +689,11 @@ void digClock(time t)
 		}
 		else
 		{
-			if(Time.hour>=13 && t.hour <=23)
+			if(t.hour>=13 && t.hour <=23)
 				sprintf(timeprint, "%2d", (t.hour % 2));
 			oledPutString(timeprint, 4 ,2*20,1); 
 			
-			if(Time.hour>=0 && t.hour <=11)
+			if(t.hour>=0 && t.hour <=11)
 			{
 				sprintf(toprint,"AM");
 				oledPutString(toprint, 5 ,2*6,1);
