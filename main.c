@@ -695,29 +695,29 @@ void setClock()
 		{
 			case 1:
 			{
-				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
 
-    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.hour > 0) //Pressed down
  					timetemp.hour--;
 				break;
 			}
 			case 2:
 			{
-				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up           
 					timetemp.minute++;	
 
-    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.minute > 0) //Pressed down
  					timetemp.minute--;	
 				break;
 			}
 
 			case 3:
 			{
-				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.second < 59)    //Pressed up           
 					timetemp.second++;	
 
-    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.second > 0) //Pressed down
  					timetemp.second--;
 
 				break;
