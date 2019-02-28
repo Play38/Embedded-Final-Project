@@ -637,12 +637,120 @@ void IntervalMenu() //potenciometer
  		DelayMs(60);
 	}
 }
+void digClock(time t)
+{
+		int timeprint;
+
+		sprintf(timeprint, "%2d", t.second);
+		oledPutString(timeprint, 4 ,2*40,1);
+		sprintf(timeprint, "%2d", t.minute);
+		oledPutString(timeprint, 4 ,2*30,1);
+
+		if(interval_24)
+		{
+			sprintf(timeprint, "%2d", t.hour);
+			oledPutString(timeprint, 4 ,2*20,1); 
+		}
+		else
+		{
+			if(Time.hour>=13 && t.hour <=23)
+				sprintf(timeprint, "%2d", (t.hour % 2));
+			oledPutString(timeprint, 4 ,2*20,1); 
+			
+			if(Time.hour>=0 && t.hour <=11)
+			{
+				sprintf(toprint,"AM");
+				oledPutString(toprint, 5 ,2*6,1);
+			}
+			else
+			{
+				sprintf(toprint,"PM");
+				oledPutString(toprint, 5 ,2*6,1);
+			}
+		}	
+ /*
+		sprintf(timeprint, "%2d", Date.month);
+		oledPutString(timeprint, 2 ,2*30,1);
+		sprintf(timeprint, "%2d", Date.day);
+		oledPutString(timeprint, 2 ,2*20,1);  */
+}
+void setClock()
+{
+	time timetemp;
+    int i , z;
+	int currChoice=1;
+	int c =1;
+	timetemp.hour = Time.hour;
+	timetemp.minute = Time.minute;
+	timetemp.second = Time.second;
+	clearScreen();
+	DelayMs(60);
+	while(1)
+	{
+    	sprintf(toprint,"Set clock");
+    	oledPutString(toprint, 0, 0,1);  
+   
+ 		digClock(timetemp);		
+		switch(c)
+		{
+			case 1:
+			{
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
+					timetemp.hour++;	
+
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+ 					timetemp.hour--;
+				break;
+			}
+			case 2:
+			{
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
+					timetemp.minute++;	
+
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+ 					timetemp.minute--;	
+				break;
+			}
+
+			case 3:
+			{
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
+					timetemp.second++;	
+
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+ 					timetemp.second--;
+
+				break;
+			}
+		}
+
+
+
+		
+		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+			c--;
+		
+		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+			c++;
+
+		if(c ==4)
+		{
+			Time.hour = timetemp.hour;
+			Time.minute = timetemp.minute;
+			Time.second = timetemp.second;
+			clearScreen0();
+			return 0;
+		}
+ 		DelayMs(60);
+	}
+}
 void setTraverse(int c){
 	switch(c){
 		//case 1: subMenu1();break;
 		case 2: IntervalMenu();break;
-		//case 3: subMenu3();break;
+		case 3: setClock();break;
 		//case 4: subMenu4();break;
+		//case 5: subMenu5();break;
 		default: break;
 	}
 }
@@ -698,43 +806,6 @@ void setMenu() //potenciometer
 	}
 }
 
-void digClock()
-{
-		int timeprint;
-
-		sprintf(timeprint, "%2d", Time.second);
-		oledPutString(timeprint, 4 ,2*40,1);
-		sprintf(timeprint, "%2d", Time.minute);
-		oledPutString(timeprint, 4 ,2*30,1);
-
-		if(interval_24)
-		{
-			sprintf(timeprint, "%2d", Time.hour);
-			oledPutString(timeprint, 4 ,2*20,1); 
-		}
-		else
-		{
-			if(Time.hour>=13 && Time.hour <=23)
-				sprintf(timeprint, "%2d", (Time.hour % 2));
-			oledPutString(timeprint, 4 ,2*20,1); 
-			
-			if(Time.hour>=0 && Time.hour <=11)
-			{
-				sprintf(toprint,"AM");
-				oledPutString(toprint, 5 ,2*6,1);
-			}
-			else
-			{
-				sprintf(toprint,"PM");
-				oledPutString(toprint, 5 ,2*6,1);
-			}
-		}	
- 
-		sprintf(timeprint, "%2d", Date.month);
-		oledPutString(timeprint, 2 ,2*30,1);
-		sprintf(timeprint, "%2d", Date.day);
-		oledPutString(timeprint, 2 ,2*20,1);  
-}
 void clockScreen()
 {  
     int i, up, down;	
@@ -742,7 +813,7 @@ void clockScreen()
 	clearScreen0();
 	while(1)
 	{
-		digClock();
+		digClock(Time);
  
 		if(CheckButtonPressed())
 			DelayMs(200);
