@@ -611,8 +611,8 @@ void menuClock(time t)
 		}
 		else
 		{
-			if(t.hour>=13 && t.hour <=23)
-				sprintf(timeprint, "%02d", (t.hour % 2));
+			
+			sprintf(timeprint, "%02d", (t.hour % 13));
 			oledPutString(timeprint, 0 ,2*40,1);
 
 			if(t.hour>=0 && t.hour <=11)
@@ -641,7 +641,7 @@ void IntervalMenu() //potenciometer
 	{
     	sprintf(toprint,"Interval");
     	oledPutString(toprint, 0, 0,1);  
- 	
+ 		menuClock(Time);
 		
 
 		pot = GetA2D();
@@ -665,7 +665,11 @@ void IntervalMenu() //potenciometer
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
 			{
 				if(currChoice == 1)
+				{	
+					sprintf(toprint,"  ");
+					oledPutString(toprint, 0 ,2*32,1);
 					interval_24 = 1;
+				}
 				else if( currChoice == 2)
 					interval_24 = 0;
 			}
@@ -689,8 +693,8 @@ void digClock(time t)
 		}
 		else
 		{
-			if(t.hour>=13 && t.hour <=23)
-				sprintf(timeprint, "%2d", (t.hour % 2));
+			
+			sprintf(timeprint, "%2d", (t.hour % 13));
 			oledPutString(timeprint, 4 ,2*20,1); 
 			
 			if(t.hour>=0 && t.hour <=11)
@@ -731,6 +735,7 @@ void setClock()
 		{
 			case 1:
 			{
+				
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
 
