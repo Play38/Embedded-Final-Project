@@ -123,7 +123,6 @@ unsigned char RA0='0', RA1='1', RA2='2', RA3='3';
 typedef struct{
 	int day;
 	int month;
-	int year;
 } date;
 typedef struct{
 	int second;
@@ -380,7 +379,6 @@ BOOL CheckButtonPressed(void);
 					{
 						Date.month = 1;
 						Date.day = 1;
-						Date.year++;
 					}
 					else
 						Date.day++;
@@ -699,18 +697,11 @@ void setMenu() //potenciometer
  		DelayMs(60);
 	}
 }
- 
-void clockScreen()
-{  
-    int i, up, down;	
-	int currChoice=1;
-	int timeprint;
-	clearScreen0();
-	while(1)
-	{
-    	//sprintf(toprint,"Main menu");
-    	//oledPutString(toprint, 0, 0,1);
-		//sprintf(toprint, Time.second);
+
+void digClock()
+{
+		int timeprint;
+
 		sprintf(timeprint, "%2d", Time.second);
 		oledPutString(timeprint, 4 ,2*40,1);
 		sprintf(timeprint, "%2d", Time.minute);
@@ -739,27 +730,20 @@ void clockScreen()
 			}
 		}	
  
-		sprintf(timeprint, "%2d", Date.year);
-		oledPutString(timeprint, 2 ,2*40,1);
 		sprintf(timeprint, "%2d", Date.month);
 		oledPutString(timeprint, 2 ,2*30,1);
 		sprintf(timeprint, "%2d", Date.day);
 		oledPutString(timeprint, 2 ,2*20,1);  
-   
- 	
-    /*	for(i=1;i<5;i++)
-    	{
-	    	sprintf(toprint, "submenu %d",i);
-	    	if(i == currChoice)oledPutString(toprint, i ,2*6,0);
-	   		else oledPutString(toprint, i ,2*6,1);
-    	}
-
-    	if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up           
-			if(currChoice > 1) currChoice--;
-
-    	if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
- 			if(currChoice < 4) currChoice++;*/
-
+}
+void clockScreen()
+{  
+    int i, up, down;	
+	int currChoice=1;
+	clearScreen0();
+	while(1)
+	{
+		digClock();
+ 
 		if(CheckButtonPressed())
 			DelayMs(200);
 			if(CheckButtonPressed())
@@ -774,7 +758,6 @@ void main(void)
 
 	Date.day=1;
 	Date.month=1;
-	Date.year=2000;
 	Time.second=0;
 	Time.minute=0;
 	Time.hour=1;
@@ -793,6 +776,7 @@ void main(void)
 	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enable
 */
 
+	
 	T0CON = 0x07 ;
 	// Initialize Timer Interrupt
 	RCONbits.IPEN = 1 ;			//Prio Enable
