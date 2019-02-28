@@ -599,23 +599,26 @@ void menuClock(time t)
 {
 		int timeprint;
 
-		sprintf(timeprint, "%2d", t.second);
+		sprintf(timeprint, "%02d", t.second);
 		oledPutString(timeprint, 0 ,2*58,1);
-		sprintf(timeprint, "%2d", t.minute);
+		sprintf(timeprint, "%02d", t.minute);
 		oledPutString(timeprint, 0 ,2*48,1);
 
 		if(interval_24)
 		{
-			sprintf(timeprint, "%2d", t.hour);
+			sprintf(timeprint, "%02d", t.hour);
 			oledPutString(timeprint, 0 ,2*38,1); 
 		}
 		else
 		{
 			if(Time.hour>=13 && t.hour <=23)
-				sprintf(timeprint, "%2d", (t.hour % 2));
+				sprintf(timeprint, "%02d", (t.hour % 2));
 			oledPutString(timeprint, 0 ,2*38,1); 
 
-		}	
+		}
+				sprintf(toprint,":");
+				oledPutString(toprint, 0 ,2*55,1);
+				oledPutString(toprint, 0 ,2*45,1);	
 
 }
 void IntervalMenu() //potenciometer
@@ -711,7 +714,7 @@ void setClock()
 	{
     	sprintf(toprint,"Set clock");
     	oledPutString(toprint, 0, 0,1);  
-   
+   		menuClock(Time);
  		digClock(timetemp);		
 		switch(c)
 		{
@@ -785,7 +788,7 @@ void setMenu() //potenciometer
 	{
     	sprintf(toprint,"Settings");
     	oledPutString(toprint, 0, 0,1);  
- 	
+ 		menuClock(Time);
 		
 
 		pot = GetA2D();
@@ -836,7 +839,6 @@ void clockScreen()
 	while(1)
 	{
 		digClock(Time);
- 		menuClock(Time);
 		if(CheckButtonPressed())
 			DelayMs(200);
 			if(CheckButtonPressed())
@@ -853,7 +855,7 @@ void main(void)
 	Date.month=1;
 	Time.second=0;
 	Time.minute=0;
-	Time.hour=1;
+	Time.hour=0;
 
 /*	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
 	T0CONbits.T0CS = 0 ;			//Clock Source -- Internal
