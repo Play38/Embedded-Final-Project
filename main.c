@@ -130,10 +130,12 @@ typedef struct{
 	int hour;
 } time;
 time Time;
+time Alarm;
 date Date;
 int timeflag = 0;
 int interval_24 = 1;
 int AM = 0;
+int alarmflag = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -677,12 +679,14 @@ void IntervalMenu() //potenciometer
  		DelayMs(60);
 	}
 }
-void digClock(time t)
+void digClock(time t, int alarMenu)
 {
 		int timeprint;
-
-		sprintf(timeprint, "%2d", t.second);
-		oledPutString(timeprint, 4 ,2*40,1);
+		if(!(alarMenu))
+		{
+			sprintf(timeprint, "%2d", t.second);
+			oledPutString(timeprint, 4 ,2*40,1);
+		}
 		sprintf(timeprint, "%2d", t.minute);
 		oledPutString(timeprint, 4 ,2*30,1);
 
@@ -730,7 +734,7 @@ void setClock()
     	sprintf(toprint,"Set clock");
     	oledPutString(toprint, 0, 0,1);  
    		menuClock(Time);
- 		digClock(timetemp);		
+ 		digClock(timetemp, 0);		
 		switch(c)
 		{
 			case 1:
@@ -785,13 +789,76 @@ void setClock()
  		DelayMs(60);
 	}
 }
+
+void AlarMenu()
+{
+	time timetemp;
+    int i , z;
+	int currChoice=1;
+	int c =1;
+	timetemp.hour = Time.hour;
+	timetemp.minute = Time.minute;
+	clearScreen();
+	DelayMs(60);
+	while(1)
+	{
+    	sprintf(toprint,"Set Alarm");
+    	oledPutString(toprint, 0, 0,1);  
+   		menuClock(Time);
+ 		digClock(timetemp, 1);		
+		switch(c)
+		{
+			case 1:
+			{
+				
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
+					timetemp.hour++;	
+
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.hour > 0) //Pressed down
+ 					timetemp.hour--;
+				break;
+			}
+			case 2:
+			{
+				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up           
+					timetemp.minute++;	
+
+    			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.minute > 0) //Pressed down
+ 					timetemp.minute--;	
+				break;
+			}
+
+		}
+
+
+
+		
+		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+			c--;
+		
+		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+			c++;
+
+		if(c ==3)
+		{
+			Alarm.hour = timetemp.hour;
+			Alarm.minute = timetemp.minute;
+			alarmflag = 1;
+			clearScreen0();
+			return 0;
+		}
+ 		DelayMs(60);
+	}
+
+
+}
 void setTraverse(int c){
 	switch(c){
 		//case 1: subMenu1();break;
 		case 2: IntervalMenu();break;
 		case 3: setClock();break;
 		//case 4: subMenu4();break;
-		//case 5: subMenu5();break;
+		case 5: AlarMenu();break;
 		//case 6: subMenu5();break;
 		default: break;
 	}
@@ -860,7 +927,12 @@ void clockScreen()
 	clearScreen0();
 	while(1)
 	{
-		digClock(Time);
+		if(alarmflag)
+		{
+			sprintf(toprint,"A");
+    		oledPutString(toprint, 2, 5*3,1);
+		}
+		digClock(Time, 0);
 		if(CheckButtonPressed())
 			DelayMs(200);
 			if(CheckButtonPressed())
