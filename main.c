@@ -602,34 +602,34 @@ void menuClock(time t)
 		sprintf(timeprint, "%02d", t.second);
 		oledPutString(timeprint, 0 ,2*58,1);
 		sprintf(timeprint, "%02d", t.minute);
-		oledPutString(timeprint, 0 ,2*48,1);
+		oledPutString(timeprint, 0 ,2*49,1);
 
 		if(interval_24)
 		{
 			sprintf(timeprint, "%02d", t.hour);
-			oledPutString(timeprint, 0 ,2*38,1); 
+			oledPutString(timeprint, 0 ,2*40,1); 
 		}
 		else
 		{
 			if(t.hour>=13 && t.hour <=23)
 				sprintf(timeprint, "%02d", (t.hour % 2));
-			oledPutString(timeprint, 0 ,2*38,1);
+			oledPutString(timeprint, 0 ,2*40,1);
 
 			if(t.hour>=0 && t.hour <=11)
 			{
 				sprintf(toprint,"AM");
-				oledPutString(toprint, 0 ,2*30,1);
+				oledPutString(toprint, 0 ,2*32,1);
 			}
 			else
 			{
 				sprintf(toprint,"PM");
-				oledPutString(toprint, 0 ,2*30,1);
+				oledPutString(toprint, 0 ,2*32,1);
 			} 
 
 		}
 				sprintf(toprint,":");
 				oledPutString(toprint, 0 ,2*55,1);
-				oledPutString(toprint, 0 ,2*45,1);	
+				oledPutString(toprint, 0 ,2*46,1);	
 
 }
 void IntervalMenu() //potenciometer
