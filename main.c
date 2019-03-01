@@ -652,9 +652,9 @@ void menuClock(time t)
 }
 void IntervalMenu() //potenciometer
 {
-    int i , z, pot;
+    int pot;
 	int currChoice=1;
-	clearScreen();
+	clearScreen0();
 	while(1)
 	{
     	sprintf(toprint,"Interval");
@@ -695,6 +695,18 @@ void IntervalMenu() //potenciometer
  		DelayMs(60);
 	}
 }
+void datePrint()
+{
+		int dateprint;
+
+		sprintf(dateprint, "%02d", Date.month);
+		oledPutString(dateprint, 7 ,2*49,1);
+		sprintf(toprint,"/");
+		oledPutString(toprint, 7 ,2*55,1);
+		sprintf(dateprint, "%02d", Date.day);
+		oledPutString(dateprint, 7 ,2*58,1);
+
+}
 void digClock(time t, int alarMenu)
 {
 		int timeprint;
@@ -722,12 +734,12 @@ void digClock(time t, int alarMenu)
 			if(t.hour>=0 && t.hour <=11)
 			{
 				sprintf(toprint,"AM");
-				oledPutString(toprint, 5 ,2*6,1);
+				oledPutString(toprint, 7 ,2*0,1);
 			}
 			else
 			{
 				sprintf(toprint,"PM");
-				oledPutString(toprint, 5 ,2*6,1);
+				oledPutString(toprint, 7 ,2*0,1);
 			}
 		}	
  /*
@@ -739,13 +751,12 @@ void digClock(time t, int alarMenu)
 void setClock()
 {
 	time timetemp;
-    int i , z;
 	int currChoice=1;
 	int c =1;
 	timetemp.hour = Time.hour;
 	timetemp.minute = Time.minute;
 	timetemp.second = Time.second;
-	clearScreen();
+	clearScreen0();
 	DelayMs(60);
 	while(1)
 	{
@@ -811,12 +822,11 @@ void setClock()
 void AlarMenu()
 {
 	time timetemp;
-    int i , z;
 	int currChoice=1;
 	int c =1;
 	timetemp.hour = Time.hour;
 	timetemp.minute = Time.minute;
-	clearScreen();
+	clearScreen0();
 	DelayMs(60);
 	while(1)
 	{
@@ -882,9 +892,9 @@ void setTraverse(int c){
 }
 void setMenu() //potenciometer
 {
-    int i , z, pot;
+    int pot;
 	int currChoice=1;
-	clearScreen();
+	clearScreen0();
 	while(1)
 	{
     	sprintf(toprint,"Settings");
@@ -933,8 +943,7 @@ void setMenu() //potenciometer
 }
 
 void clockScreen()
-{  
-    int i, up, down;	
+{  	
 	int currChoice=1;
 	clearScreen0();
 	while(1)
@@ -950,7 +959,7 @@ void clockScreen()
     		oledPutString(toprint, 2, 5*3,1);
 		}
 		digClock(Time, 0);
-		
+		datePrint();
 		if(CheckButtonPressed())
 			alarmflag = 0; // dunno how to distinguish between those 2 presses
 		
