@@ -135,7 +135,8 @@ date Date;
 int timeflag = 0;
 int interval_24 = 1;
 int AM = 0;
-int alarmflag, alarmcount = 0;
+int alarmcount = 0;
+int alarmflag = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -562,7 +563,7 @@ int CheckLRVolt(unsigned int x){
 }
  
 int CheckUDVolt(unsigned int x,unsigned int y){
-    if(x<y && y-x>75 && x < 600){
+    if(x<y && y-x>40 && x < 900){
         return 1;       //Up
 	}
     else if (y<x && x-y>120 && y < 600){ 
