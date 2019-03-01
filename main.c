@@ -711,8 +711,10 @@ void digClock(time t, int alarMenu)
 		}
 		else
 		{
-			
-			sprintf(timeprint, "%2d", (t.hour % 13));
+			if(t.hour >12)
+				sprintf(timeprint, "%2d", ((t.hour + 1) % 13));
+			else
+				sprintf(timeprint, "%2d", (t.hour % 13));
 			oledPutString(timeprint, 4 ,2*20,1); 
 			
 			if(t.hour>=0 && t.hour <=11)
