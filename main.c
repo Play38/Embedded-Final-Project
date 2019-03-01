@@ -796,6 +796,16 @@ void setClock()
 
 				break;
 			}
+			case 4:
+			{
+				Time.hour = timetemp.hour;
+				Time.minute = timetemp.minute;
+				Time.second = timetemp.second;
+				clearScreen0();
+				return 0;
+				
+			}
+			
 		}
 
 
@@ -807,18 +817,31 @@ void setClock()
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
 			c++;
 
-		if(c ==4)
-		{
-			Time.hour = timetemp.hour;
-			Time.minute = timetemp.minute;
-			Time.second = timetemp.second;
-			clearScreen0();
-			return 0;
-		}
  		DelayMs(60);
 	}
 }
 
+void setDate()
+{
+		int dateprint;
+		date datemp;
+		int currChoice=1;
+		int c =1;
+		datemp.month = Date.month;
+		datemp.day = Date.day;
+		clearScreen0();
+		DelayMs(60);
+		while(1)
+		{
+			sprintf(dateprint, "%02d", datemp.month);
+			oledPutString(dateprint, 3 ,2*29,1);
+			sprintf(toprint,"/");
+			oledPutString(toprint, 3 ,2*35,1);
+			sprintf(dateprint, "%02d", datemp.day);
+			oledPutString(dateprint, 3 ,2*38,1);
+		}
+
+}
 void AlarMenu()
 {
 	time timetemp;
@@ -855,6 +878,16 @@ void AlarMenu()
  					timetemp.minute--;	
 				break;
 			}
+		
+			case 3:
+			{
+				Alarm.hour = timetemp.hour;
+				Alarm.minute = timetemp.minute;
+				alarmflag = 1;
+				clearScreen0();
+				return 0;
+			
+			}
 
 		}
 
@@ -867,14 +900,6 @@ void AlarMenu()
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
 			c++;
 
-		if(c ==3)
-		{
-			Alarm.hour = timetemp.hour;
-			Alarm.minute = timetemp.minute;
-			alarmflag = 1;
-			clearScreen0();
-			return 0;
-		}
  		DelayMs(60);
 	}
 
@@ -885,7 +910,7 @@ void setTraverse(int c){
 		//case 1: subMenu1();break;
 		case 2: IntervalMenu();break;
 		case 3: setClock();break;
-		//case 4: subMenu4();break;
+		case 4: setDate();break;
 		case 5: AlarMenu();break;
 		default: break;
 	}
