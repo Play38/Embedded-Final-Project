@@ -873,7 +873,6 @@ void setTraverse(int c){
 		case 3: setClock();break;
 		//case 4: subMenu4();break;
 		case 5: AlarMenu();break;
-		//case 6: subMenu5();break;
 		default: break;
 	}
 }
@@ -890,18 +889,16 @@ void setMenu() //potenciometer
 		
 
 		pot = GetA2D();
-		if(pot < 170)
+		if(pot < 204)
 			currChoice=1;
-		else if(pot > 170 && pot < 340)
+		else if(pot > 204 && pot < 409)
 			currChoice=2;
-		else if(pot > 340 && pot < 510)
+		else if(pot > 409 && pot < 613)
 			currChoice=3;
-		else if(pot > 510 && pot < 680)
+		else if(pot > 613 && pot < 818)
 			currChoice=4;
-		else if(pot > 680 && pot < 850)
+		else if(pot > 818 && pot < 1023)
 			currChoice=5;
-		else if(pot > 850 && pot < 1023)
-			currChoice=6;
 
 		sprintf(toprint, "Display Mode");
 		if(currChoice == 1)oledPutString(toprint, 1 ,2*6,0);
@@ -915,12 +912,9 @@ void setMenu() //potenciometer
 		sprintf(toprint, "Set Date");
 		if(currChoice == 4)oledPutString(toprint, 4 ,2*6,0);
 	   		else oledPutString(toprint, 4 ,2*6,1);
-		sprintf(toprint, "Set Alarm");
+		sprintf(toprint, "Alarm");
 		if(currChoice == 5)oledPutString(toprint, 5 ,2*6,0);
 	   		else oledPutString(toprint, 5 ,2*6,1);
-		sprintf(toprint, "Disable Alarm");
-		if(currChoice == 6)oledPutString(toprint, 6 ,2*6,0);
-	   		else oledPutString(toprint, 6 ,2*6,1);
 
 		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
 		{
