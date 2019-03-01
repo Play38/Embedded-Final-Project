@@ -699,11 +699,11 @@ void datePrint()
 {
 		int dateprint;
 
-		sprintf(dateprint, "%02d", Date.month);
+		sprintf(dateprint, "%02d", Date.day);
 		oledPutString(dateprint, 7 ,2*49,1);
 		sprintf(toprint,"/");
 		oledPutString(toprint, 7 ,2*55,1);
-		sprintf(dateprint, "%02d", Date.day);
+		sprintf(dateprint, "%02d", Date.month);
 		oledPutString(dateprint, 7 ,2*58,1);
 
 }
@@ -820,7 +820,10 @@ void setClock()
  		DelayMs(60);
 	}
 }
+int datecheck(date* t, int mode)
+{
 
+}
 void setDate()
 {
 		int dateprint;
@@ -833,11 +836,11 @@ void setDate()
 		DelayMs(60);
 		while(1)
 		{
-			sprintf(dateprint, "%02d", datemp.month);
+			sprintf(dateprint, "%02d", datemp.day);
 			oledPutString(dateprint, 3 ,2*29,1);
 			sprintf(toprint,"/");
 			oledPutString(toprint, 3 ,2*35,1);
-			sprintf(dateprint, "%02d", datemp.day);
+			sprintf(dateprint, "%02d", datemp.month);
 			oledPutString(dateprint, 3 ,2*38,1);
 
 			switch(c)
@@ -845,20 +848,20 @@ void setDate()
 				case 1:
 				{
 				
-					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 24)    //Pressed up           
-						datemp.month++;	
+					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.day < 12)    //Pressed up           
+						datemp.day++;	
 
-    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.month > 0) //Pressed down
- 						datemp.month--;
+    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.day > 1) //Pressed down
+ 						datemp.day--;
 					break;
 				}
 				case 2:
 				{
-					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.day < 59)    //Pressed up           
-						datemp.day++;	
+					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 12)    //Pressed up           
+						datemp.month++;	
 
-    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.day > 0) //Pressed down
- 						datemp.day--;	
+    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.month > 1) //Pressed down
+ 						datemp.month--;	
 					break;
 				}
 		
