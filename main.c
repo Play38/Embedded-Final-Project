@@ -700,23 +700,23 @@ void digClock(time t, int alarMenu)
 		int timeprint;
 		if(!(alarMenu))
 		{
-			sprintf(timeprint, "%2d", t.second);
+			sprintf(timeprint, "%02d", t.second);
 			oledPutString(timeprint, 4 ,2*40,1);
 		}
-		sprintf(timeprint, "%2d", t.minute);
+		sprintf(timeprint, "%02d", t.minute);
 		oledPutString(timeprint, 4 ,2*30,1);
 
 		if(interval_24)
 		{
-			sprintf(timeprint, "%2d", t.hour);
+			sprintf(timeprint, "%02d", t.hour);
 			oledPutString(timeprint, 4 ,2*20,1); 
 		}
 		else
 		{
 			if(t.hour >12)
-				sprintf(timeprint, "%2d", ((t.hour + 1) % 13));
+				sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
 			else
-				sprintf(timeprint, "%2d", (t.hour % 13));
+				sprintf(timeprint, "%02d", (t.hour % 13));
 			oledPutString(timeprint, 4 ,2*20,1); 
 			
 			if(t.hour>=0 && t.hour <=11)
