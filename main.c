@@ -839,8 +839,46 @@ void setDate()
 			oledPutString(toprint, 3 ,2*35,1);
 			sprintf(dateprint, "%02d", datemp.day);
 			oledPutString(dateprint, 3 ,2*38,1);
-		}
 
+			switch(c)
+			{
+				case 1:
+				{
+				
+					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 24)    //Pressed up           
+						datemp.month++;	
+
+    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.month > 0) //Pressed down
+ 						datemp.month--;
+					break;
+				}
+				case 2:
+				{
+					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.day < 59)    //Pressed up           
+						datemp.day++;	
+
+    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.day > 0) //Pressed down
+ 						datemp.day--;	
+					break;
+				}
+		
+				case 3:
+				{
+					Date.month = datemp.month;
+					Date.day = datemp.day;
+					clearScreen0();
+					return 0;
+				}
+			}
+			if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+			c--;
+		
+			if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+			c++;
+
+ 			DelayMs(60);
+
+		}
 }
 void AlarMenu()
 {
