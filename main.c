@@ -264,143 +264,24 @@ BOOL CheckButtonPressed(void);
 
 		if (timeflag)
 		{
-		
-			switch(Date.month)
+			if((Date.month == 1 || Date.month == 3 || Date.month == 5 || Date.month == 7 || Date.month == 8 || Date.month == 10 || Date.month == 12) && Date.day == 31)
 			{
-				case 1:
-				{
-					if(Date.day == 31)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-					
-				}
-				case 2:
-				{
-					if(Date.day == 28)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 3:
-				{
-					if(Date.day == 31)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 4:
-				{
-					if(Date.day == 30)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 5:
-				{
-					if(Date.day == 31)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 6:
-				{
-					if(Date.day == 30)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 7:
-				{
-					if(Date.day == 31)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 8:
-				{
-					if(Date.day == 31)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 9:
-				{
-					if(Date.day == 30)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 10:
-				{
-					if(Date.day == 31)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 11:
-				{
-					if(Date.day == 30)
-					{
-						Date.month++;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
-				case 12:
-				{
-					if(Date.day == 31)
-					{
-						Date.month = 1;
-						Date.day = 1;
-					}
-					else
-						Date.day++;
-					break;
-				}
+				Date.month++;
+				Date.day = 1;
 			}
+			else if ((Date.month == 4 || Date.month == 6 || Date.month == 9 || Date.month == 11) && Date.day == 30)
+			{
+				Date.month++;
+				Date.day = 1;
+			}
+			else if(Date.month == 2 && Date.day == 28)
+			{
+				Date.month++;
+				Date.day = 1;
+			}
+			else
+				Date.day++;
+
 			timeflag = 0;
 		}
 	INTCONbits.TMR0IF = 0 ;
