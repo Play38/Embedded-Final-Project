@@ -627,8 +627,10 @@ void menuClock(time t)
 		}
 		else
 		{
-			
-			sprintf(timeprint, "%02d", (t.hour % 13));
+			if(t.hour >12)
+				sprintf(timeprint, "%2d", ((t.hour + 1) % 13));
+			else
+				sprintf(timeprint, "%2d", (t.hour % 13));
 			oledPutString(timeprint, 0 ,2*40,1);
 
 			if(t.hour>=0 && t.hour <=11)
