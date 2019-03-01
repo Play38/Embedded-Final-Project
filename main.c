@@ -836,11 +836,6 @@ int datecheck(date* t, int mode)
 		{
 			if(t->day < 30)
 				return 1;
-			else if (t->day > 30)
-			{
-				t->day = 30;
-				return 0;
-			}
 			else
 				return 0;
 
@@ -849,17 +844,27 @@ int datecheck(date* t, int mode)
 		{
 			if(t->day < 28)
 				return 1;
-			else if (t->day > 280)
-			{
-				t->day = 28;
-				return 0;
-			}
 			else
 				return 0;
 		}
 		else
 			return 0;
 
+	}
+	else
+	{
+		if ((t->month == 4 || t->month == 6 || t->month == 9 || t->month == 11) && t->day > 30)
+		{
+			t->day = 30;
+			return 0;
+		}
+		else if(t->month == 2 && t->day >28)
+		{
+			t->day = 28;
+			return 0;
+		}
+		else
+			return 1;
 	}
 	
 }
@@ -898,9 +903,11 @@ void setDate()
 				{
 					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 12)    //Pressed up           
 						datemp.month++;	
+					datecheck(&datemp,0);
 
     				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.month > 1) //Pressed down
- 						datemp.month--;	
+ 						datemp.month--;
+					datecheck(&datemp,0);	
 					break;
 				}
 		
