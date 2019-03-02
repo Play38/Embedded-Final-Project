@@ -766,6 +766,10 @@ void setDate()
 		DelayMs(60);
 		while(1)
 		{
+			sprintf(toprint,"Set Date");
+    		oledPutString(toprint, 0, 0,1);  
+   			menuClock(Time);
+			
 			sprintf(dateprint, "%02d", datemp.day);
 			oledPutString(dateprint, 3 ,2*29,1);
 			sprintf(toprint,"/");
@@ -976,7 +980,7 @@ void main(void)
 
 	Date.day=1;
 	Date.month=1;
-	Time.second=1;
+	Time.second=0;
 	Time.minute=0;
 	Time.hour=0;
 
