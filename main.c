@@ -229,6 +229,11 @@ BOOL CheckButtonPressed(void);
 	static char disp=0 ;
 	if(INTCONbits.T0IF)
 	{
+		if(!(alarmflag) && disp) //if I'm disabling the alarm in the middle
+		{
+			WriteCommand(disp ? 0xA6 : 0xA7) ;
+			disp = !disp;
+		}
 		if(alarmflag && Time.hour == Alarm.hour && Time.minute == Alarm.minute)
 		{
 			if (alarmcount == 19)
@@ -971,7 +976,7 @@ void main(void)
 
 	Date.day=1;
 	Date.month=1;
-	Time.second=0;
+	Time.second=1;
 	Time.minute=0;
 	Time.hour=0;
 
