@@ -51,6 +51,7 @@ void oledPutImage(rom unsigned char *ptr, unsigned char sizex, unsigned char siz
 void oledWriteChar1x(char letter, unsigned char page, unsigned char column,...) ;
 void oledWriteCharRaw( char letter );
 
+
 /*********************************************/
 extern ROM BYTE g_pucFont[95][5];
 /*********************************************/

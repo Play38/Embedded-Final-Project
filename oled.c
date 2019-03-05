@@ -263,6 +263,19 @@ void FillDisplay(unsigned char data)
 	return;
 }
 
+void WoledWriteCharRaw( char letter )
+{
+	int i,c;
+	letter -= ' ';					// Adjust character to table that starts at 0x20
+	for(i = 0; i<=4 ; i++)
+	{
+	for(c=0 ; c<3;c++)
+		WriteData(g_pucFont[letter][i]);	// Write first column
+	}
+	//for(i=0;i<3;i++)
+	WriteData(0x00);					// Write 1 column for buffer to next character
+	return;
+}
 void oledWriteCharRaw( char letter )
 {
 	letter -= ' ';					// Adjust character to table that starts at 0x20
@@ -288,6 +301,20 @@ void oledWriteCharRawR( char letter )
 	return;
 }
 
+void WoledWriteCharRawR( char letter )
+{
+	int i,c;
+	letter -= ' ';					// Adjust character to table that starts at 0x20
+	for(i = 0; i<=4 ; i++)
+	{
+	for(c=0 ; c<3;c++)
+		WriteData(~g_pucFont[letter][i]);	// Write first column
+	}
+	//for(i=0;i<3;i++)
+	WriteData(0x00);					// Write 1 column for buffer to next character
+	return;
+}
+
 void oledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
 {
 	BYTE i;
@@ -298,9 +325,27 @@ void oledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
 	WriteCommand(page);
 	column += OFFSET;
 	WriteCommand(0x00+(column&0x0F));
-	WriteCommand(0x10+((column>>4)&0x0F));
+	WriteCommand(0x10 +((column>>4)&0x0F));
 	if(!flag)oledWriteCharRawR( letter );
-	else oledWriteCharRaw( letter ) ;
+	else 
+	oledWriteCharRaw( letter ) ;
+	return;
+}
+
+void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
+{
+	BYTE i;
+	va_list ap;
+	BOOL flag=1;
+    va_start(ap, column);
+	flag=va_arg(ap, BOOL);
+	WriteCommand(page);
+	column += OFFSET;
+	WriteCommand(0x00+(column&0x0F));
+	WriteCommand(0x10 +((column>>4)&0x0F));
+	if(!flag)WoledWriteCharRawR( letter );
+	else 
+	WoledWriteCharRaw( letter ) ;
 	return;
 }
 
@@ -313,6 +358,26 @@ void oledPutROMString(rom unsigned char *ptr,unsigned char page, unsigned char c
 
 	while(*++ptr)
 		oledWriteCharRaw(*ptr);
+}
+
+void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
+{
+	va_list ap;
+	BOOL flag=1;
+    va_start(ap, col);
+	flag=va_arg(ap, BOOL);
+	page = page + 0xB0;
+	WoledWriteChar1x(*ptr,page,col,flag);
+	
+	if(!flag)
+{
+	while(*++ptr)
+		WoledWriteCharRawR(*ptr);
+}
+	else{
+	while(*++ptr)
+		WoledWriteCharRaw(*ptr);
+}	
 }
 
 void oledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
@@ -334,7 +399,6 @@ void oledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
 		oledWriteCharRaw(*ptr);
 }	
 }
-
 
 void oledPutImage(rom unsigned char *ptr, unsigned char sizex, unsigned char sizey, unsigned char startx, unsigned char starty)
 {

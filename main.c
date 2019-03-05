@@ -58,6 +58,8 @@
 #include "oled.h"
  
 #include "soft_start.h"
+
+#include "OledGraphics.h"
  
  
 //  ========================    CONFIGURATION   ========================
@@ -594,20 +596,21 @@ void datePrint()
 
 }
 void digClock(time t, int alarMenu)
-{
+{	
+
 		int timeprint;
 		if(!(alarMenu))
 		{
 			sprintf(timeprint, "%02d", t.second);
-			oledPutString(timeprint, 4 ,2*40,1);
+			WoledPutString(timeprint, 4 ,3*33,1);
 		}
 		sprintf(timeprint, "%02d", t.minute);
-		oledPutString(timeprint, 4 ,2*30,1);
+		WoledPutString(timeprint, 4 ,4*13,1);
 
 		if(interval_24)
 		{
 			sprintf(timeprint, "%02d", t.hour);
-			oledPutString(timeprint, 4 ,2*20,1); 
+			WoledPutString(timeprint, 4 ,4*2,1); 
 		}
 		else
 		{
@@ -615,7 +618,7 @@ void digClock(time t, int alarMenu)
 				sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
 			else
 				sprintf(timeprint, "%02d", (t.hour % 13));
-			oledPutString(timeprint, 4 ,2*20,1); 
+			WoledPutString(timeprint, 4 ,4*2,1);
 			
 			if(t.hour>=0 && t.hour <=11)
 			{
@@ -950,6 +953,8 @@ void clockScreen()
 	clearScreen0();
 	while(1)
 	{
+		sprintf(toprint,"b");
+		oledWriteChar1x(toprint,6,40,1);
 		if(alarmflag)
 		{
 			sprintf(toprint,"A");
