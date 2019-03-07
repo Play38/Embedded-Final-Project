@@ -935,7 +935,7 @@ void setMenu() //potenciometer
 		if(currChoice == 5)oledPutString(toprint, 5 ,2*6,0);
 	   		else oledPutString(toprint, 5 ,2*6,1);
 
-		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+		//if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
 		{
 		clearScreen0();
 		return 0;

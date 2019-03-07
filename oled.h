@@ -50,6 +50,7 @@ void oledPutROMString(rom unsigned char *ptr,unsigned char page, unsigned char c
 void oledPutImage(rom unsigned char *ptr, unsigned char sizex, unsigned char sizey, unsigned char startx, unsigned char starty);
 void oledWriteChar1x(char letter, unsigned char page, unsigned char column,...) ;
 void oledWriteCharRaw( char letter );
+unsigned int eToTW (unsigned char a);
 
 
 /*********************************************/

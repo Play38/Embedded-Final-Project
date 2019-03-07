@@ -263,19 +263,6 @@ void FillDisplay(unsigned char data)
 	return;
 }
 
-void WoledWriteCharRaw( char letter )
-{
-	int i,c;
-	letter -= ' ';					// Adjust character to table that starts at 0x20
-	for(i = 0; i<=4 ; i++)
-	{
-	for(c=0 ; c<3;c++)
-		WriteData(g_pucFont[letter][i]);	// Write first column
-	}
-	//for(i=0;i<3;i++)
-	WriteData(0x00);					// Write 1 column for buffer to next character
-	return;
-}
 void oledWriteCharRaw( char letter )
 {
 	letter -= ' ';					// Adjust character to table that starts at 0x20
@@ -301,20 +288,6 @@ void oledWriteCharRawR( char letter )
 	return;
 }
 
-void WoledWriteCharRawR( char letter )
-{
-	int i,c;
-	letter -= ' ';					// Adjust character to table that starts at 0x20
-	for(i = 0; i<=4 ; i++)
-	{
-	for(c=0 ; c<3;c++)
-		WriteData(~g_pucFont[letter][i]);	// Write first column
-	}
-	//for(i=0;i<3;i++)
-	WriteData(0x00);					// Write 1 column for buffer to next character
-	return;
-}
-
 void oledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
 {
 	BYTE i;
@@ -332,25 +305,6 @@ void oledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
 	return;
 }
 
-void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
-{
-	BYTE i;
-	va_list ap;
-	BOOL flag=1;
-    va_start(ap, column);
-	flag=va_arg(ap, BOOL);
-	WriteCommand(page);
-	column += OFFSET;
-	WriteCommand(0x00+(column&0x0F));
-	WriteCommand(0x10 +((column>>4)&0x0F));
-	if(!flag)WoledWriteCharRawR( letter );
-	else 
-	WoledWriteCharRaw( letter ) ;
-	return;
-}
-
-
-
 void oledPutROMString(rom unsigned char *ptr,unsigned char page, unsigned char col)
 {
 	page = page + 0xB0;
@@ -358,26 +312,6 @@ void oledPutROMString(rom unsigned char *ptr,unsigned char page, unsigned char c
 
 	while(*++ptr)
 		oledWriteCharRaw(*ptr);
-}
-
-void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
-{
-	va_list ap;
-	BOOL flag=1;
-    va_start(ap, col);
-	flag=va_arg(ap, BOOL);
-	page = page + 0xB0;
-	WoledWriteChar1x(*ptr,page,col,flag);
-	
-	if(!flag)
-{
-	while(*++ptr)
-		WoledWriteCharRawR(*ptr);
-}
-	else{
-	while(*++ptr)
-		WoledWriteCharRaw(*ptr);
-}	
 }
 
 void oledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
@@ -421,8 +355,90 @@ void oledPutImage(rom unsigned char *ptr, unsigned char sizex, unsigned char siz
 	}
 	return;
 }
+///////////////////////// BIG LETTERS //////////////////////////
 
+unsigned int eToTW (unsigned char a) {
+    unsigned int output = 0;
+
+    output |= a & (1 << 7) ? 0xf << 28 : 0x0;
+    output |= a & (1 << 6) ? 0xf << 24 : 0x0;
+    output |= a & (1 << 5) ? 0xf << 20 : 0x0;
+    output |= a & (1 << 4) ? 0xf << 16 : 0x0;
+
+    output |= a & (1 << 3) ? 0xf << 12 : 0x0;
+    output |= a & (1 << 2) ? 0xf << 8 : 0x0;
+    output |= a & (1 << 1) ? 0xf << 4 : 0x0;
+    output |= a & 1 ? 0xf : 0x0;
+
+    return output;
+}
+void WoledWriteCharRaw( char letter )
+{
+	int i,c;
+	unsigned char in, out;
+	letter -= ' ';					// Adjust character to table that starts at 0x20
+	for(i = 0; i<=4 ; i++)
+		for(c=0 ; c<3;c++)
+			WriteData(eToTW(g_pucFont[letter][i]));
+
+	//for(i=0;i<3;i++)
+	WriteData(0x00);					// Write 1 column for buffer to next character
+	return;
+}
+
+void WoledWriteCharRawR( char letter )
+{
+	int i,c;
+	letter -= ' ';					// Adjust character to table that starts at 0x20
+	for(i = 0; i<=4 ; i++)
+	{
+	for(c=0 ; c<3;c++)
+		WriteData(~g_pucFont[letter][i]);	// Write first column
+	}
+	//for(i=0;i<3;i++)
+	WriteData(0x00);					// Write 1 column for buffer to next character
+	return;
+}
+
+
+void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
+{
+	BYTE i;
+	va_list ap;
+	BOOL flag=1;
+    va_start(ap, column);
+	flag=va_arg(ap, BOOL);
+	WriteCommand(page); // choosing where it starts
+	column += OFFSET-5;
+	WriteCommand(0x00+(column&0x0F));// doing spaces
+	WriteCommand(0x10 +((column>>4)&0x0F)); // doing spaces
+	if(!flag)WoledWriteCharRawR( letter );
+	else 
+	WoledWriteCharRaw( letter ) ;
+	return;
+}
+
+void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
+{
+	va_list ap;
+	BOOL flag=1;
+    va_start(ap, col);
+	flag=va_arg(ap, BOOL);
+	page = page + 0xB0; //choosing where it starts
+	WoledWriteChar1x(*ptr,page,col,flag);
 	
+	if(!flag)
+{
+	while(*++ptr)
+		WoledWriteCharRawR(*ptr);
+}
+	else{
+	while(*++ptr)
+		WoledWriteCharRaw(*ptr);
+}	
+}
+
+//////////////////////////// END BIG LETTERS////////////////////////////////
 
 
 //////////////////////////////////////
