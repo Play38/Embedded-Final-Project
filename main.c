@@ -422,6 +422,20 @@ static void InitializeSystem(void)
 static char toprint[24];
 void mainTraverse(int c);
 
+void ProtectoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,BOOL flag)
+{
+	INTCONbits.GIE = 0;
+	oledPutString( ptr, page, col,flag) ;
+	INTCONbits.GIE = 1 ;
+}
+
+void WProtectoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,BOOL flag)
+{
+	INTCONbits.GIE = 0 ;
+	WoledPutString( ptr, page, col,flag);
+	INTCONbits.GIE = 1 ;
+}
+
 BOOL CheckButtonPressed(void)
 {
    if(PORTBbits.RB0 == 0) 
@@ -504,14 +518,14 @@ void menuClock(time t)
 		int timeprint;
 
 		sprintf(timeprint, "%02d", t.second);
-		oledPutString(timeprint, 0 ,2*58,1);
+		ProtectoledPutString(timeprint, 0 ,2*58,1);
 		sprintf(timeprint, "%02d", t.minute);
-		oledPutString(timeprint, 0 ,2*49,1);
+		ProtectoledPutString(timeprint, 0 ,2*49,1);
 
 		if(interval_24)
 		{
 			sprintf(timeprint, "%02d", t.hour);
-			oledPutString(timeprint, 0 ,2*40,1); 
+			ProtectoledPutString(timeprint, 0 ,2*40,1); 
 		}
 		else
 		{
@@ -519,23 +533,23 @@ void menuClock(time t)
 				sprintf(timeprint, "%2d", ((t.hour + 1) % 13));
 			else
 				sprintf(timeprint, "%2d", (t.hour % 13));
-			oledPutString(timeprint, 0 ,2*40,1);
+			ProtectoledPutString(timeprint, 0 ,2*40,1);
 
 			if(t.hour>=0 && t.hour <=11)
 			{
 				sprintf(toprint,"AM");
-				oledPutString(toprint, 0 ,2*32,1);
+				ProtectoledPutString(toprint, 0 ,2*32,1);
 			}
 			else
 			{
 				sprintf(toprint,"PM");
-				oledPutString(toprint, 0 ,2*32,1);
+				ProtectoledPutString(toprint, 0 ,2*32,1);
 			} 
 
 		}
 				sprintf(toprint,":");
-				oledPutString(toprint, 0 ,2*55,1);
-				oledPutString(toprint, 0 ,2*46,1);	
+				ProtectoledPutString(toprint, 0 ,2*55,1);
+				ProtectoledPutString(toprint, 0 ,2*46,1);	
 
 }
 void IntervalMenu() //potenciometer
@@ -546,7 +560,7 @@ void IntervalMenu() //potenciometer
 	while(1)
 	{
     	sprintf(toprint,"Interval");
-    	oledPutString(toprint, 0, 0,1);  
+    	ProtectoledPutString(toprint, 0, 0,1);  
  		menuClock(Time);
 		
 
@@ -557,11 +571,11 @@ void IntervalMenu() //potenciometer
 			currChoice=2;
 
 		sprintf(toprint, "24h mode");
-		if(currChoice == 1)oledPutString(toprint, 1 ,2*6,0);
-	   		else oledPutString(toprint, 1 ,2*6,1);
+		if(currChoice == 1)ProtectoledPutString(toprint, 1 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 1 ,2*6,1);
 		sprintf(toprint, "12h mode");
-		if(currChoice == 2)oledPutString(toprint, 2 ,2*6,0);
-	   		else oledPutString(toprint, 2 ,2*6,1);
+		if(currChoice == 2)ProtectoledPutString(toprint, 2 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 2 ,2*6,1);
 
 		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
 		{
@@ -573,7 +587,7 @@ void IntervalMenu() //potenciometer
 				if(currChoice == 1)
 				{	
 					sprintf(toprint,"  ");
-					oledPutString(toprint, 0 ,2*32,1);
+					ProtectoledPutString(toprint, 0 ,2*32,1);
 					interval_24 = 1;
 				}
 				else if( currChoice == 2)
@@ -588,11 +602,11 @@ void datePrint()
 		int dateprint;
 
 		sprintf(dateprint, "%02d", Date.day);
-		oledPutString(dateprint, 7 ,2*49,1);
+		ProtectoledPutString(dateprint, 7 ,2*49,1);
 		sprintf(toprint,"/");
-		oledPutString(toprint, 7 ,2*55,1);
+		ProtectoledPutString(toprint, 7 ,2*55,1);
 		sprintf(dateprint, "%02d", Date.month);
-		oledPutString(dateprint, 7 ,2*58,1);
+		ProtectoledPutString(dateprint, 7 ,2*58,1);
 
 }
 void digClock(time t, int alarMenu)
@@ -602,15 +616,15 @@ void digClock(time t, int alarMenu)
 		if(!(alarMenu))
 		{
 			sprintf(timeprint, "%02d", t.second);
-			WoledPutString(timeprint, 4 ,3*33,1);
+			WProtectoledPutString(timeprint, 4 ,3*33,1);
 		}
 		sprintf(timeprint, "%02d", t.minute);
-		WoledPutString(timeprint, 4 ,4*13,1);
+		WProtectoledPutString(timeprint, 4 ,4*13,1);
 
 		if(interval_24)
 		{
 			sprintf(timeprint, "%02d", t.hour);
-			WoledPutString(timeprint, 4 ,4*2,1); 
+			WProtectoledPutString(timeprint, 4 ,4*2,1); 
 		}
 		else
 		{
@@ -618,24 +632,24 @@ void digClock(time t, int alarMenu)
 				sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
 			else
 				sprintf(timeprint, "%02d", (t.hour % 13));
-			WoledPutString(timeprint, 4 ,4*2,1);
+			WProtectoledPutString(timeprint, 4 ,4*2,1);
 			
 			if(t.hour>=0 && t.hour <=11)
 			{
 				sprintf(toprint,"AM");
-				oledPutString(toprint, 7 ,2*0,1);
+				ProtectoledPutString(toprint, 7 ,2*0,1);
 			}
 			else
 			{
 				sprintf(toprint,"PM");
-				oledPutString(toprint, 7 ,2*0,1);
+				ProtectoledPutString(toprint, 7 ,2*0,1);
 			}
 		}	
  /*
 		sprintf(timeprint, "%2d", Date.month);
-		oledPutString(timeprint, 2 ,2*30,1);
+		ProtectoledPutString(timeprint, 2 ,2*30,1);
 		sprintf(timeprint, "%2d", Date.day);
-		oledPutString(timeprint, 2 ,2*20,1);  */
+		ProtectoledPutString(timeprint, 2 ,2*20,1);  */
 }
 void setClock()
 {
@@ -650,7 +664,7 @@ void setClock()
 	while(1)
 	{
     	sprintf(toprint,"Set clock");
-    	oledPutString(toprint, 0, 0,1);  
+    	ProtectoledPutString(toprint, 0, 0,1);  
    		menuClock(Time);
  		digClock(timetemp, 0);		
 		switch(c)
@@ -770,15 +784,15 @@ void setDate()
 		while(1)
 		{
 			sprintf(toprint,"Set Date");
-    		oledPutString(toprint, 0, 0,1);  
+    		ProtectoledPutString(toprint, 0, 0,1);  
    			menuClock(Time);
 			
 			sprintf(dateprint, "%02d", datemp.day);
-			oledPutString(dateprint, 3 ,2*29,1);
+			ProtectoledPutString(dateprint, 3 ,2*29,1);
 			sprintf(toprint,"/");
-			oledPutString(toprint, 3 ,2*35,1);
+			ProtectoledPutString(toprint, 3 ,2*35,1);
 			sprintf(dateprint, "%02d", datemp.month);
-			oledPutString(dateprint, 3 ,2*38,1);
+			ProtectoledPutString(dateprint, 3 ,2*38,1);
 
 			switch(c)
 			{
@@ -834,7 +848,7 @@ void AlarMenu()
 	while(1)
 	{
     	sprintf(toprint,"Set Alarm");
-    	oledPutString(toprint, 0, 0,1);  
+    	ProtectoledPutString(toprint, 0, 0,1);  
    		menuClock(Time);
  		digClock(timetemp, 1);		
 		switch(c)
@@ -903,7 +917,7 @@ void setMenu() //potenciometer
 	while(1)
 	{
     	sprintf(toprint,"Settings");
-    	oledPutString(toprint, 0, 0,1);  
+    	ProtectoledPutString(toprint, 0, 0,1);  
  		menuClock(Time);
 		
 
@@ -920,22 +934,22 @@ void setMenu() //potenciometer
 			currChoice=5;
 
 		sprintf(toprint, "Display Mode");
-		if(currChoice == 1)oledPutString(toprint, 1 ,2*6,0);
-	   		else oledPutString(toprint, 1 ,2*6,1);
+		if(currChoice == 1)ProtectoledPutString(toprint, 1 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 1 ,2*6,1);
 		sprintf(toprint, "12/24H Interval");
-		if(currChoice == 2)oledPutString(toprint, 2 ,2*6,0);
-	   		else oledPutString(toprint, 2 ,2*6,1);
+		if(currChoice == 2)ProtectoledPutString(toprint, 2 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 2 ,2*6,1);
 		sprintf(toprint, "Set Time");
-		if(currChoice == 3)oledPutString(toprint, 3 ,2*6,0);
-	   		else oledPutString(toprint, 3 ,2*6,1);
+		if(currChoice == 3)ProtectoledPutString(toprint, 3 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 3 ,2*6,1);
 		sprintf(toprint, "Set Date");
-		if(currChoice == 4)oledPutString(toprint, 4 ,2*6,0);
-	   		else oledPutString(toprint, 4 ,2*6,1);
+		if(currChoice == 4)ProtectoledPutString(toprint, 4 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 4 ,2*6,1);
 		sprintf(toprint, "Alarm");
-		if(currChoice == 5)oledPutString(toprint, 5 ,2*6,0);
-	   		else oledPutString(toprint, 5 ,2*6,1);
+		if(currChoice == 5)ProtectoledPutString(toprint, 5 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 5 ,2*6,1);
 
-		//if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
 		{
 		clearScreen0();
 		return 0;
@@ -953,20 +967,18 @@ void clockScreen()
 	clearScreen0();
 	while(1)
 	{
-		sprintf(toprint,"b");
-		oledWriteChar1x(toprint,6,40,1);
 		if(alarmflag)
 		{
 			sprintf(toprint,"A");
-    		oledPutString(toprint, 2, 5*3,1);
+    		ProtectoledPutString(toprint, 2, 5*3,1);
 		}
 		else
 		{
 			sprintf(toprint," ");
-    		oledPutString(toprint, 2, 5*3,1);
+    		ProtectoledPutString(toprint, 2, 5*3,1);
 		}
-		digClock(Time, 0);
 		datePrint();
+		digClock(Time, 0);
 		if(CheckButtonPressed())
 			alarmflag = 0; // dunno how to distinguish between those 2 presses
 		

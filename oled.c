@@ -62,7 +62,6 @@ SHORT _clipTop;
 SHORT _clipRight;
 SHORT _clipBottom;
 
-
 /*********************************************************************
 * Function:  void  DelayMs(WORD time)
 *
@@ -357,18 +356,18 @@ void oledPutImage(rom unsigned char *ptr, unsigned char sizex, unsigned char siz
 }
 ///////////////////////// BIG LETTERS //////////////////////////
 
-unsigned int eToTW (unsigned char a) {
-    unsigned int output = 0;
+unsigned int VertExpand (unsigned char a) {
+    unsigned int  output = 0;
 
-    output |= a & (1 << 7) ? 0xf << 28 : 0x0;
-    output |= a & (1 << 6) ? 0xf << 24 : 0x0;
-    output |= a & (1 << 5) ? 0xf << 20 : 0x0;
-    output |= a & (1 << 4) ? 0xf << 16 : 0x0;
+    output |= a & (1 << 7) ? 0xfU << 28 : 0x0;
+    output |= a & (1 << 6) ? 0xfU << 24 : 0x0;
+    output |= a & (1 << 5) ? 0xfU << 20 : 0x0;
+    output |= a & (1 << 4) ? 0xfU << 16 : 0x0;
 
-    output |= a & (1 << 3) ? 0xf << 12 : 0x0;
-    output |= a & (1 << 2) ? 0xf << 8 : 0x0;
-    output |= a & (1 << 1) ? 0xf << 4 : 0x0;
-    output |= a & 1 ? 0xf : 0x0;
+    output |= a & (1 << 3) ? 0xfU << 12 : 0x0;
+    output |= a & (1 << 2) ? 0xfU << 8 : 0x0;
+    output |= a & (1 << 1) ? 0xfU << 4 : 0x0;
+    output |= a & 1 ? 0xfU : 0x0;
 
     return output;
 }
@@ -379,8 +378,9 @@ void WoledWriteCharRaw( char letter )
 	letter -= ' ';					// Adjust character to table that starts at 0x20
 	for(i = 0; i<=4 ; i++)
 		for(c=0 ; c<3;c++)
-			WriteData(eToTW(g_pucFont[letter][i]));
-
+		{
+			WriteData(VertExpand(g_pucFont[letter][i]));
+		}
 	//for(i=0;i<3;i++)
 	WriteData(0x00);					// Write 1 column for buffer to next character
 	return;
