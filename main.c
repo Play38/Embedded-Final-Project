@@ -459,7 +459,7 @@ int GetA2D(){   //Set ADCON and start input
 }
  
 int CheckLRVolt(unsigned int x){
-    if(x>600)
+    if(x>400)
         return 0;
     else return 1;
 }
@@ -997,7 +997,7 @@ void main(void)
 
 	Date.day=1;
 	Date.month=1;
-	Time.second=0;
+	Time.second=1;
 	Time.minute=0;
 	Time.hour=0;
 

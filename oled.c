@@ -356,52 +356,46 @@ void oledPutImage(rom unsigned char *ptr, unsigned char sizex, unsigned char siz
 }
 ///////////////////////// BIG LETTERS //////////////////////////
 
-unsigned int VertExpand (unsigned char a) {
-    unsigned int  output = 0;
+unsigned long VertExpand (char a) {
+    unsigned long  x = 0;
 
-    output |= a & (1 << 7) ? 0xfU << 28 : 0x0;
-    output |= a & (1 << 6) ? 0xfU << 24 : 0x0;
-    output |= a & (1 << 5) ? 0xfU << 20 : 0x0;
-    output |= a & (1 << 4) ? 0xfU << 16 : 0x0;
-
-    output |= a & (1 << 3) ? 0xfU << 12 : 0x0;
-    output |= a & (1 << 2) ? 0xfU << 8 : 0x0;
-    output |= a & (1 << 1) ? 0xfU << 4 : 0x0;
-    output |= a & 1 ? 0xfU : 0x0;
-
-    return output;
+    x = a;
+    x = (x | (x << 12));
+    x = (x | (x <<  6)) & 0x03030303;
+    x = (x | (x <<  3)) & 0x11111111;
+    x = (x << 4) - x;
+    return x;
+    //return output;
 }
-void WoledWriteCharRaw( char letter )
+void WoledWriteCharRaw( char letter, int count)
 {
 	int i,c;
-	unsigned char in, out;
 	letter -= ' ';					// Adjust character to table that starts at 0x20
 	for(i = 0; i<=4 ; i++)
 		for(c=0 ; c<3;c++)
-		{
-			WriteData(VertExpand(g_pucFont[letter][i]));
-		}
+			WriteData((VertExpand(g_pucFont[letter][i])) >> count*8);
+
+		
 	//for(i=0;i<3;i++)
 	WriteData(0x00);					// Write 1 column for buffer to next character
 	return;
 }
 
-void WoledWriteCharRawR( char letter )
+void WoledWriteCharRawR( char letter, int count )
 {
 	int i,c;
 	letter -= ' ';					// Adjust character to table that starts at 0x20
 	for(i = 0; i<=4 ; i++)
-	{
-	for(c=0 ; c<3;c++)
-		WriteData(~g_pucFont[letter][i]);	// Write first column
-	}
+		for(c=0 ; c<3;c++)
+			WriteData((VertExpand(~g_pucFont[letter][i])) >> count*8);
+
+		
 	//for(i=0;i<3;i++)
 	WriteData(0x00);					// Write 1 column for buffer to next character
-	return;
 }
 
 
-void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
+void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,int count,...)
 {
 	BYTE i;
 	va_list ap;
@@ -410,32 +404,53 @@ void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,...)
 	flag=va_arg(ap, BOOL);
 	WriteCommand(page); // choosing where it starts
 	column += OFFSET-5;
-	WriteCommand(0x00+(column&0x0F));// doing spaces
+	WriteCommand(0x00+(column&0x0F));// adjusting where it starts in the page
 	WriteCommand(0x10 +((column>>4)&0x0F)); // doing spaces
-	if(!flag)WoledWriteCharRawR( letter );
+	
+	/*if(!flag)WoledWriteCharRawR( letter,count );
 	else 
-	WoledWriteCharRaw( letter ) ;
+	WoledWriteCharRaw(letter, count) ;*/
+	/// THIS LINE IS MAKING ISSUES WITH THE DUPLICATION
 	return;
 }
 
 void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...)
 {
 	va_list ap;
+	int count;
 	BOOL flag=1;
+	unsigned char pageTemp;
     va_start(ap, col);
 	flag=va_arg(ap, BOOL);
 	page = page + 0xB0; //choosing where it starts
-	WoledWriteChar1x(*ptr,page,col,flag);
-	
+	pageTemp = page;
+	//WoledWriteChar1x(*ptr,page,col,flag);
 	if(!flag)
-{
-	while(*++ptr)
-		WoledWriteCharRawR(*ptr);
-}
-	else{
-	while(*++ptr)
-		WoledWriteCharRaw(*ptr);
-}	
+	{
+		while(*++ptr)
+		{
+			for(count = 0; count < 4 ; count++)
+			{
+				WoledWriteChar1x(*ptr,pageTemp,col, count,flag);
+				WoledWriteCharRawR(*ptr, count);
+				pageTemp++;
+			}
+			pageTemp = page;
+		}
+	}
+	else
+	{
+		while(*++ptr)
+		{
+			for(count = 0; count < 4 ; count++)
+			{
+				WoledWriteChar1x(*ptr,pageTemp,col, count,flag);
+				WoledWriteCharRaw(*ptr, count);
+				pageTemp++;
+			}
+			pageTemp = page;
+		}
+	}	
 }
 
 //////////////////////////// END BIG LETTERS////////////////////////////////
