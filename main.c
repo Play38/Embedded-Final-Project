@@ -723,9 +723,6 @@ void setClock()
 			}
 			
 		}
-
-
-		//sprintf(toprint,"                           ");
 		
 		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
 			{
