@@ -385,7 +385,7 @@ void WoledWriteCharRawR( char letter, int count )
 	letter -= ' ';					// Adjust character to table that starts at 0x20
 	for(i = 0; i<=4 ; i++)
 		for(c=0 ; c<3;c++)
-			WriteData((VertExpand(~g_pucFont[letter][i])));
+			WriteData((VertExpand(~g_pucFont[letter][i])) >> count*8);
 
 		
 	//for(i=0;i<3;i++)
@@ -416,6 +416,7 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 {
 	va_list ap;
 	int count;
+	int wordcount = 1;
 	BOOL flag=1;
 	unsigned char pageTemp;
     va_start(ap, col);
@@ -425,7 +426,7 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 	for(count = 0; count < 4 ; count++)
 	{
 	WoledWriteChar1x(*ptr,pageTemp,col, count,flag);
-	WoledWriteCharRaw(*ptr, count);
+	WoledWriteCharRaw(*ptr, count);	
 	pageTemp++;
 	}
 	pageTemp = page;
@@ -435,11 +436,12 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 		{
 			for(count = 0; count < 4 ; count++)
 			{
-				WoledWriteChar1x(*ptr,pageTemp,col+16, count,flag);
+				WoledWriteChar1x(*ptr,pageTemp,col+16*wordcount, count,flag);
 				WoledWriteCharRawR(*ptr, count);
 				pageTemp++;
 			}
 			pageTemp = page;
+			wordcount++;
 		}
 	}
 	else
@@ -448,11 +450,12 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 		{
 			for(count = 0; count < 4 ; count++)
 			{
-				WoledWriteChar1x(*ptr,pageTemp,col+16, count,flag);
+				WoledWriteChar1x(*ptr,pageTemp,col+16*wordcount, count,flag);
 				WoledWriteCharRaw(*ptr, count);
 				pageTemp++;
 			}
 			pageTemp = page;
+			wordcount++;
 		}
 	}	
 }

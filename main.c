@@ -616,15 +616,15 @@ void digClock(time t, int alarMenu)
 		if(!(alarMenu))
 		{
 			sprintf(timeprint, "%02d", t.second);
-			WProtectoledPutString(timeprint, 2 ,3*33,1);
+			WProtectoledPutString(timeprint, 2 ,2*51,1);
 		}
-		sprintf(timeprint, "%02d", t.minute);
-		WProtectoledPutString(timeprint, 2 ,4*13,1);
+		sprintf(timeprint, "%02d:", t.minute);
+		WProtectoledPutString(timeprint, 2 ,2*27,1);
 
 		if(interval_24)
 		{
-			sprintf(timeprint, "%02d", t.hour);
-			WProtectoledPutString(timeprint, 2 ,4*2,1); 
+			sprintf(timeprint, "%02d:", t.hour);
+			WProtectoledPutString(timeprint, 2 ,2*3,1); 
 		}
 		else
 		{
@@ -671,6 +671,8 @@ void setClock()
 		{
 			case 1:
 			{
+		//		sprintf(toprint,"======");
+		//	ProtectoledPutString(toprint, 6 ,1*3,1);
 				
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
@@ -970,12 +972,12 @@ void clockScreen()
 		if(alarmflag)
 		{
 			sprintf(toprint,"A");
-    		ProtectoledPutString(toprint, 5, 5*3,1);
+    		ProtectoledPutString(toprint, 6, 5*3,1);
 		}
 		else
 		{
 			sprintf(toprint," ");
-    		ProtectoledPutString(toprint, 5, 5*3,1);
+    		ProtectoledPutString(toprint, 6, 5*3,1);
 		}
 		datePrint();
 		digClock(Time, 0);
