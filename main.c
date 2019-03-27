@@ -670,7 +670,7 @@ void setClock()
     	ProtectoledPutString(toprint, 0, 0,1);  
    		menuClock(Time);
  		digClock(timetemp, 0);	
-			sprintf(toprint,"=====");	
+		sprintf(toprint,"=====");	
 		switch(c)
 		{
 			case 0:
