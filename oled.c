@@ -26,13 +26,11 @@
     PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
     IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL OR
     CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
-
   File Description:
     
     Change History:
      Rev   Date         Description
      1.0                Initial release
-
 ********************************************************************/
 
 /******** Include files **********************/
@@ -387,7 +385,7 @@ void WoledWriteCharRawR( char letter, int count )
 	letter -= ' ';					// Adjust character to table that starts at 0x20
 	for(i = 0; i<=4 ; i++)
 		for(c=0 ; c<3;c++)
-			WriteData((VertExpand(~g_pucFont[letter][i])) >> count*8);
+			WriteData((VertExpand(~g_pucFont[letter][i])));
 
 		
 	//for(i=0;i<3;i++)
@@ -424,14 +422,20 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 	flag=va_arg(ap, BOOL);
 	page = page + 0xB0; //choosing where it starts
 	pageTemp = page;
-	//WoledWriteChar1x(*ptr,page,col,flag);
+	for(count = 0; count < 4 ; count++)
+	{
+	WoledWriteChar1x(*ptr,pageTemp,col, count,flag);
+	WoledWriteCharRaw(*ptr, count);
+	pageTemp++;
+	}
+	pageTemp = page;
 	if(!flag)
 	{
 		while(*++ptr)
 		{
 			for(count = 0; count < 4 ; count++)
 			{
-				WoledWriteChar1x(*ptr,pageTemp,col, count,flag);
+				WoledWriteChar1x(*ptr,pageTemp,col+16, count,flag);
 				WoledWriteCharRawR(*ptr, count);
 				pageTemp++;
 			}
@@ -444,7 +448,7 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 		{
 			for(count = 0; count < 4 ; count++)
 			{
-				WoledWriteChar1x(*ptr,pageTemp,col, count,flag);
+				WoledWriteChar1x(*ptr,pageTemp,col+16, count,flag);
 				WoledWriteCharRaw(*ptr, count);
 				pageTemp++;
 			}

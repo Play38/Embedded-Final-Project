@@ -616,15 +616,15 @@ void digClock(time t, int alarMenu)
 		if(!(alarMenu))
 		{
 			sprintf(timeprint, "%02d", t.second);
-			WProtectoledPutString(timeprint, 4 ,3*33,1);
+			WProtectoledPutString(timeprint, 2 ,3*33,1);
 		}
 		sprintf(timeprint, "%02d", t.minute);
-		WProtectoledPutString(timeprint, 4 ,4*13,1);
+		WProtectoledPutString(timeprint, 2 ,4*13,1);
 
 		if(interval_24)
 		{
 			sprintf(timeprint, "%02d", t.hour);
-			WProtectoledPutString(timeprint, 4 ,4*2,1); 
+			WProtectoledPutString(timeprint, 2 ,4*2,1); 
 		}
 		else
 		{
@@ -632,7 +632,7 @@ void digClock(time t, int alarMenu)
 				sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
 			else
 				sprintf(timeprint, "%02d", (t.hour % 13));
-			WProtectoledPutString(timeprint, 4 ,4*2,1);
+			WProtectoledPutString(timeprint, 2 ,4*2,1);
 			
 			if(t.hour>=0 && t.hour <=11)
 			{
@@ -970,12 +970,12 @@ void clockScreen()
 		if(alarmflag)
 		{
 			sprintf(toprint,"A");
-    		ProtectoledPutString(toprint, 2, 5*3,1);
+    		ProtectoledPutString(toprint, 5, 5*3,1);
 		}
 		else
 		{
 			sprintf(toprint," ");
-    		ProtectoledPutString(toprint, 2, 5*3,1);
+    		ProtectoledPutString(toprint, 5, 5*3,1);
 		}
 		datePrint();
 		digClock(Time, 0);
