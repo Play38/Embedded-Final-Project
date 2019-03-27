@@ -513,6 +513,9 @@ void clearScreen0(){
 		oledPutROMString("                                 ", i, 0); 
 	}
 }
+void clearScreenRow(int i){
+		oledPutROMString("                                 ", i, 0); 
+}
 void menuClock(time t)
 {
 		int timeprint;
@@ -669,11 +672,15 @@ void setClock()
  		digClock(timetemp, 0);		
 		switch(c)
 		{
+			case 0:
+			{
+				clearScreen0();
+				return 0;
+			}
 			case 1:
 			{
-		//		sprintf(toprint,"======");
-		//	ProtectoledPutString(toprint, 6 ,1*3,1);
-				
+				sprintf(toprint,"=====");
+				ProtectoledPutString(toprint, 6 ,1*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
 
@@ -683,6 +690,8 @@ void setClock()
 			}
 			case 2:
 			{
+				sprintf(toprint,"=====");
+				ProtectoledPutString(toprint, 6 ,25*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up           
 					timetemp.minute++;	
 
@@ -693,6 +702,8 @@ void setClock()
 
 			case 3:
 			{
+				sprintf(toprint,"=====");
+				ProtectoledPutString(toprint, 6 ,49*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.second < 59)    //Pressed up           
 					timetemp.second++;	
 
@@ -714,13 +725,19 @@ void setClock()
 		}
 
 
-
+		//sprintf(toprint,"                           ");
 		
 		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+			{
 			c--;
+			clearScreenRow(6);
+			}
 		
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+			{
 			c++;
+			clearScreenRow(6);
+			}
 
  		DelayMs(60);
 	}
