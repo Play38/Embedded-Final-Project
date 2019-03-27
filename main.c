@@ -669,7 +669,8 @@ void setClock()
     	sprintf(toprint,"Set clock");
     	ProtectoledPutString(toprint, 0, 0,1);  
    		menuClock(Time);
- 		digClock(timetemp, 0);		
+ 		digClock(timetemp, 0);	
+			sprintf(toprint,"=====");	
 		switch(c)
 		{
 			case 0:
@@ -679,7 +680,6 @@ void setClock()
 			}
 			case 1:
 			{
-				sprintf(toprint,"=====");
 				ProtectoledPutString(toprint, 6 ,1*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
@@ -690,7 +690,6 @@ void setClock()
 			}
 			case 2:
 			{
-				sprintf(toprint,"=====");
 				ProtectoledPutString(toprint, 6 ,25*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up           
 					timetemp.minute++;	
@@ -702,7 +701,6 @@ void setClock()
 
 			case 3:
 			{
-				sprintf(toprint,"=====");
 				ProtectoledPutString(toprint, 6 ,49*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.second < 59)    //Pressed up           
 					timetemp.second++;	
