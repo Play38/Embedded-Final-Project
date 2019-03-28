@@ -753,7 +753,7 @@ void setClock()
 			
 		}
 		
-		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+		if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to return to main menu
 			{
 			c--;
 			clearScreenRow(6);
@@ -895,12 +895,18 @@ void AlarMenu()
     	sprintf(toprint,"Set Alarm");
     	ProtectoledPutString(toprint, 0, 0,1);  
    		menuClock(Time);
- 		digClock(timetemp, 1);		
+ 		digClock(timetemp, 1);
+		sprintf(toprint,"=====");			
 		switch(c)
 		{
+			case 0:
+			{
+				clearScreen0();
+				return 0;
+			}
 			case 1:
 			{
-				
+				ProtectoledPutString(toprint, 6 ,13*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
 
@@ -910,6 +916,7 @@ void AlarMenu()
 			}
 			case 2:
 			{
+				ProtectoledPutString(toprint, 6 ,37*2,1);
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up           
 					timetemp.minute++;	
 
@@ -930,14 +937,18 @@ void AlarMenu()
 
 		}
 
-
-
 		
-		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+		if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to return to main menu
+			{
 			c--;
+			clearScreenRow(6);
+			}
 		
 		if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+			{
 			c++;
+			clearScreenRow(6);
+			}
 
  		DelayMs(60);
 	}
