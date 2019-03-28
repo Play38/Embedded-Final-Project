@@ -632,10 +632,10 @@ void digClock(time t, int alarMenu)
 		else
 		{
 			if(t.hour >12)
-				sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
+				sprintf(timeprint, "%02d:", ((t.hour + 1) % 13));
 			else
-				sprintf(timeprint, "%02d", (t.hour % 13));
-			WProtectoledPutString(timeprint, 2 ,4*2,1);
+				sprintf(timeprint, "%02d:", (t.hour % 13));
+			WProtectoledPutString(timeprint, 2 ,2*3,1); 
 			
 			if(t.hour>=0 && t.hour <=11)
 			{
