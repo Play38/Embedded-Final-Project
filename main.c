@@ -232,7 +232,7 @@ BOOL CheckButtonPressed(void);
 	static char disp=0 ;
 	if(INTCONbits.T0IF)
 	{
-		if (clockcount == 22)
+		if (clockcount == 45)
 		{
 		if(!(alarmflag) && disp) //if I'm disabling the alarm in the middle
 		{
@@ -1097,7 +1097,7 @@ void main(void)
 	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
 	T0CONbits.T0CS = 0 ;			//Clock Source -- Internal
 	T0CONbits.PSA = 0 ;				//Use Pre-Scaler
-	T0CONbits.T0PS = 2 ;			//Prescale 1:256
+	T0CONbits.T0PS = 1 ;			//Prescale 1:256
 	T0CONbits.TMR0ON = 1 ;			//Set Timer to ON
 	RCONbits.IPEN = 1 ;				//Use Priority Interrutps
 	INTCON2bits.T0IP = 1 ;			//Timer0 High-Priority
