@@ -560,6 +560,7 @@ void IntervalMenu() //potenciometer
     int pot;
 	int currChoice=1;
 	clearScreen0();
+	DelayMs(60);
 	while(1)
 	{
     	sprintf(toprint,"Interval");
@@ -592,9 +593,15 @@ void IntervalMenu() //potenciometer
 					sprintf(toprint,"  ");
 					ProtectoledPutString(toprint, 0 ,2*32,1);
 					interval_24 = 1;
+					clearScreen0();
+					return 0;
 				}
 				else if( currChoice == 2)
+				{
 					interval_24 = 0;
+					clearScreen0();
+					return 0;
+				}
 			}
 		
  		DelayMs(60);
@@ -649,9 +656,9 @@ void digClock(time t, int alarMenu)
 			}
 		}	
 		//
-		return 0;
-
 		}
+		else
+		{
 		sprintf(timeprint, "%02d", t.minute);
 		WProtectoledPutString(timeprint, 2 ,2*39,1);
 
@@ -678,7 +685,8 @@ void digClock(time t, int alarMenu)
 				sprintf(toprint,"PM");
 				ProtectoledPutString(toprint, 7 ,2*0,1);
 			}
-		}	
+		}
+	}
  /*
 		sprintf(timeprint, "%2d", Date.month);
 		ProtectoledPutString(timeprint, 2 ,2*30,1);
@@ -832,18 +840,23 @@ void setDate()
     		ProtectoledPutString(toprint, 0, 0,1);  
    			menuClock(Time);
 			
-			sprintf(dateprint, "%02d", datemp.day);
-			ProtectoledPutString(dateprint, 3 ,2*29,1);
-			sprintf(toprint,"/");
-			ProtectoledPutString(toprint, 3 ,2*35,1);
+			sprintf(dateprint, "%02d/", datemp.day);
+			WProtectoledPutString(dateprint, 2 ,2*15,1);
+			//sprintf(toprint,"/");
+			//ProtectoledPutString(toprint, 3 ,2*35,1);
 			sprintf(dateprint, "%02d", datemp.month);
-			ProtectoledPutString(dateprint, 3 ,2*38,1);
-
+			WProtectoledPutString(dateprint, 2 ,2*39,1); 
+			sprintf(toprint,"=====");
 			switch(c)
 			{
+				case 0:
+				{
+					clearScreen0();
+					return 0;
+				}
 				case 1:
 				{
-				
+					ProtectoledPutString(toprint, 6 ,13*2,1);
 					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datecheck(&datemp,1))    //Pressed up           
 						datemp.day++;	
 
@@ -853,6 +866,7 @@ void setDate()
 				}
 				case 2:
 				{
+					ProtectoledPutString(toprint, 6 ,37*2,1);
 					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 12)    //Pressed up           
 						datemp.month++;	
 					datecheck(&datemp,0);
@@ -871,11 +885,17 @@ void setDate()
 					return 0;
 				}
 			}
-			if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
-			c--;
+			if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to return to main menu
+			{
+				c--;
+				clearScreenRow(6);
+			}
 		
 			if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
-			c++;
+			{
+				c++;
+				clearScreenRow(6);
+			}
 
  			DelayMs(60);
 
@@ -1020,29 +1040,37 @@ void setMenu() //potenciometer
 void clockScreen()
 {  	
 	int currChoice=1;
+	int click;
 	clearScreen0();
 	while(1)
 	{
 		if(alarmflag)
 		{
 			sprintf(toprint,"A");
-    		ProtectoledPutString(toprint, 6, 5*3,1);
+    		ProtectoledPutString(toprint, 7 ,4*8,1);
 		}
 		else
 		{
 			sprintf(toprint," ");
-    		ProtectoledPutString(toprint, 6, 5*3,1);
+    		ProtectoledPutString(toprint, 7, 4*8,1);
 		}
 		datePrint();
 		digClock(Time, 0);
 		if(CheckButtonPressed())
-			alarmflag = 0; // dunno how to distinguish between those 2 presses
-		
-
-		if(CheckButtonPressed())
+		{
+			click = 1;
 			DelayMs(200);
 			if(CheckButtonPressed())
+			{
+				click = 0;
 				setMenu();
+			}
+		}
+		if(click)
+		{
+			alarmflag = 0;
+			click = 0;
+		}
 
 	}
 }
