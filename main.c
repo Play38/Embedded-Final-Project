@@ -294,7 +294,6 @@ BOOL CheckButtonPressed(void);
 	TMR0H = 0x48;
 	TMR0L = 0xe5;
 	INTCONbits.TMR0IF = 0b0 ;
-	INTCONbits.TMR0IF = 0 ;
 	}
  
   } //This return will be a "retfie fast", since this is in a #pragma interrupt section
