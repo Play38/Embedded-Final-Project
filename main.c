@@ -139,7 +139,6 @@ int interval_24 = 1;
 int AM = 0;
 int alarmcount = 0;
 int alarmflag = 0;
-int clockcount = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -232,8 +231,6 @@ BOOL CheckButtonPressed(void);
 	static char disp=0 ;
 	if(INTCONbits.T0IF)
 	{
-		if (clockcount == 45)
-		{
 		if(!(alarmflag) && disp) //if I'm disabling the alarm in the middle
 		{
 			WriteCommand(disp ? 0xA6 : 0xA7) ;
@@ -294,12 +291,9 @@ BOOL CheckButtonPressed(void);
 
 			timeflag = 0;
 		}
-		clockcount = 0;
-	}
-	else
-	{
-	clockcount++;
-	}
+	TMR0H = 0x48;
+	TMR0L = 0xe5;
+	INTCONbits.TMR0IF = 0b0 ;
 	INTCONbits.TMR0IF = 0 ;
 	}
  
@@ -1094,7 +1088,7 @@ void main(void)
 	Time.minute=0;
 	Time.hour=0;
 
-	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
+/*	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
 	T0CONbits.T0CS = 0 ;			//Clock Source -- Internal
 	T0CONbits.PSA = 0 ;				//Use Pre-Scaler
 	T0CONbits.T0PS = 1 ;			//Prescale 1:256
@@ -1105,16 +1099,16 @@ void main(void)
 	INTCONbits.PEIE = 1 ;
 	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enable
 
-
+*/
 	
-/*	T0CON = 0x07 ;
+	T0CON = 0x07 ;
 	// Initialize Timer Interrupt
 	RCONbits.IPEN = 1 ;			//Prio Enable
 	INTCON2bits.TMR0IP = 1 ;	//Use Hi-Prio
 	INTCON = 0xE0 ;				//Enable Timer Interrupt
 
 	T0CON |= 0x80;				//Start the Timer
-	*/
+	
 	clockScreen();
     //mainMenu();
 	
