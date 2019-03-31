@@ -1039,10 +1039,27 @@ void setMenu() //potenciometer
 	}
 }
 
+int buttonCheck(void)
+{
+	long checkCount;
+	for(checkCount=0;checkCount<15000;checkCount++)
+	{
+		if(!(CheckButtonPressed()))
+			return 0;
+		if(checkCount%5000 == 0)
+		{
+			datePrint();
+			digClock(Time, 0);
+		}
+	}
+		return 1;
+
+}
+
 void clockScreen()
 {  	
 	int currChoice=1;
-	int click;
+	int pressCheck = 0;
 	clearScreen0();
 	while(1)
 	{
@@ -1060,21 +1077,14 @@ void clockScreen()
 		digClock(Time, 0);
 		if(CheckButtonPressed())
 		{
-			click = 1;
-			DelayMs(200);
-			if(CheckButtonPressed())
-			{
-				click = 0;
+			if(buttonCheck())
 				setMenu();
-			}
-		}
-		if(click)
-		{
-			alarmflag = 0;
-			click = 0;
-		}
+			else
+				alarmflag = 0;
+			
 
-	}
+		}
+}
 }
 
 void main(void)
@@ -1086,19 +1096,6 @@ void main(void)
 	Time.second=1;
 	Time.minute=0;
 	Time.hour=0;
-
-/*	T0CONbits.T08BIT = 0 ;			//Timer0 16BIT COUNTER
-	T0CONbits.T0CS = 0 ;			//Clock Source -- Internal
-	T0CONbits.PSA = 0 ;				//Use Pre-Scaler
-	T0CONbits.T0PS = 1 ;			//Prescale 1:256
-	T0CONbits.TMR0ON = 1 ;			//Set Timer to ON
-	RCONbits.IPEN = 1 ;				//Use Priority Interrutps
-	INTCON2bits.T0IP = 1 ;			//Timer0 High-Priority
-	INTCONbits.GIE = 1 ;			//Enable Interrupts
-	INTCONbits.PEIE = 1 ;
-	INTCONbits.T0IE = 1 ;			//Timer0 Overflow Interrupt Enable
-
-*/
 	
 	T0CON = 0x07 ;
 	// Initialize Timer Interrupt
