@@ -122,7 +122,7 @@
 #pragma udata
 //You can define Global Data Elements here
 unsigned char RA0='0', RA1='1', RA2='2', RA3='3';
-/*char cord[60][2] = {
+char cord[60][2] = {
 {67,0},{71,1},{74,2},{79,3},{81,4},
 {82,5},{84,6},{88,9},{91,12},{92,14},
 {93,16},{95,18},{96,21},{97,25},{98,29},
@@ -134,7 +134,7 @@ unsigned char RA0='0', RA1='1', RA2='2', RA3='3';
 {40,47},{38,44},{37,41},{36,38},{35,35},
 {35,32},{35,29},{36,26},{37,22},{38,18},
 {40,16},{41,13},{44,10},{47,7},{49,6},
-{51,5},{52,4},{54,3},{57,2},{61,1}};*/
+{51,5},{52,4},{54,3},{57,2},{61,1}};
 typedef struct {
     int day;
     int month;
@@ -147,11 +147,14 @@ typedef struct {
 time Time;
 time Alarm;
 date Date;
-int timeflag = 0;
-int interval_24 = 1;
-int AM = 0;
-int alarmcount = 0;
-int alarmflag = 0;
+char xtemp,ytemp;
+BOOL tickSec,tickMin,tickHour, onClock = 0;
+BOOL timeflag = 0;
+BOOL interval_24 = 1;
+BOOL AM = 0;
+BOOL alarmcount = 0;
+BOOL alarmflag = 0;
+BOOL analogflag = 0;
 //  ========================    PRIVATE PROTOTYPES  ========================
 static void InitializeSystem(void);
 static void ProcessIO(void);
@@ -261,8 +264,9 @@ void YourHighPriorityISRCode()
             alarmcount++;
 
         }
-
+		
         Time.second++;
+		tickSec = 1;
         if(Time.second == 60)
         {
             Time.second = 0;
@@ -631,7 +635,7 @@ void setInterAndDis(int chooser) //potenciometer
             {
                 if (chooser)
                 {
-                    alarmflag = 0;
+                    analogflag = 0;
                     clearScreen0();
                     return 0;
                 }
@@ -646,7 +650,7 @@ void setInterAndDis(int chooser) //potenciometer
             {
                 if (chooser)
                 {
-                    alarmflag = 1;
+                    analogflag = 1;
                     clearScreen0();
                     return 0;
                 }
@@ -672,6 +676,28 @@ void datePrint()
     ProtectoledPutString(toprint, 7 ,2*55,1);
     sprintf(dateprint, "%02d", Date.month);
     ProtectoledPutString(dateprint, 7 ,2*58,1);
+
+}
+void analClock()
+{
+	if(tickSec)
+	{	
+		if(onClock)
+		{
+			//drawLine( 66, 32, xtemp, ytemp, thick );
+			if(Time.second == 0)
+				drawLine( 66, 32, cord[59][0], cord[59][1], thin );	
+			else
+				drawLine( 66, 32, cord[Time.second-1][0], cord[Time.second-1][1], thin );
+		}	
+		//xtemp = 66+(cord[Time.second][0]-66)/2;
+		//ytemp =  32+(cord[Time.second][1]-32)/2; hour
+		//drawLine( 66, 32, xtemp, ytemp, thick );
+		drawLine( 66, 32, cord[Time.second][0], cord[Time.second][1], thin );
+		onClock = 1;
+		tickSec = 0;
+	}
+	
 
 }
 void digClock(time t, int alarMenu)
@@ -1047,6 +1073,7 @@ void setMenu() //potenciometer
         if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
         {
             clearScreen0();
+			tickSec = 0;
             return 0;
         }
         if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
@@ -1065,8 +1092,10 @@ int buttonCheck(void)
             return 0;
         if(checkCount%5000 == 0)
         {
-            datePrint();
-            digClock(Time, 0);
+            if(!(analogflag))
+			digClock(Time, 0);
+			else
+			{}
         }
     }
     return 1;
@@ -1091,11 +1120,19 @@ void clockScreen()
             ProtectoledPutString(toprint, 7, 4*8,1);
         }
         datePrint();
-        digClock(Time, 0);
+		if(!(analogflag))
+			digClock(Time, 0);
+		else
+		{
+			analClock();
+		}
         if(CheckButtonPressed())
         {
             if(buttonCheck())
+				{
+				onClock = 0;
                 setMenu();
+				}
             else
                 alarmflag = 0;
 
