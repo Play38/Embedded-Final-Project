@@ -122,6 +122,19 @@
 #pragma udata
 //You can define Global Data Elements here
 unsigned char RA0='0', RA1='1', RA2='2', RA3='3';
+/*char cord[60][2] = {
+{67,0},{71,1},{74,2},{79,3},{81,4},
+{82,5},{84,6},{88,9},{91,12},{92,14},
+{93,16},{95,18},{96,21},{97,25},{98,29},
+{98,32},{98,35},{97,39},{96,43},{95,45},
+{93,47},{92,50},{89,53},{85,56},{84,58},
+{82,58},{79,60},{76,61},{73,62},{70,63},
+{67,63},{64,63},{60,62},{57,61},{54,60},
+{51,58},{47,56},{45,54},{43,52},{41,50},
+{40,47},{38,44},{37,41},{36,38},{35,35},
+{35,32},{35,29},{36,26},{37,22},{38,18},
+{40,16},{41,13},{44,10},{47,7},{49,6},
+{51,5},{52,4},{54,3},{57,2},{61,1}};*/
 typedef struct{
 	int day;
 	int month;
@@ -557,7 +570,7 @@ void menuClock(time t)
 				ProtectoledPutString(toprint, 0 ,2*46,1);	
 
 }
-void IntervalMenu() //potenciometer
+void setInterAndDis(int chooser) //potenciometer
 {
     int pot;
 	int currChoice=1;
@@ -565,7 +578,10 @@ void IntervalMenu() //potenciometer
 	DelayMs(60);
 	while(1)
 	{
-    	sprintf(toprint,"Interval");
+		if (chooser)
+    		sprintf(toprint,"Interval");
+		else
+			sprintf(toprint,"Display");
     	ProtectoledPutString(toprint, 0, 0,1);  
  		menuClock(Time);
 		
@@ -575,13 +591,24 @@ void IntervalMenu() //potenciometer
 			currChoice=1;
 		else if(pot > 511 && pot < 1023)
 			currChoice=2;
-
+		if(chooser)
+		{
+		sprintf(toprint, "Digital mode");
+		if(currChoice == 1)ProtectoledPutString(toprint, 1 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 1 ,2*6,1);
+		sprintf(toprint, "Analog mode");
+		if(currChoice == 2)ProtectoledPutString(toprint, 2 ,2*6,0);
+	   		else ProtectoledPutString(toprint, 2 ,2*6,1);
+		}
+		else
+		{
 		sprintf(toprint, "24h mode");
 		if(currChoice == 1)ProtectoledPutString(toprint, 1 ,2*6,0);
 	   		else ProtectoledPutString(toprint, 1 ,2*6,1);
 		sprintf(toprint, "12h mode");
 		if(currChoice == 2)ProtectoledPutString(toprint, 2 ,2*6,0);
 	   		else ProtectoledPutString(toprint, 2 ,2*6,1);
+		}
 
 		if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
 		{
@@ -592,17 +619,33 @@ void IntervalMenu() //potenciometer
 			{
 				if(currChoice == 1)
 				{	
-					sprintf(toprint,"  ");
-					ProtectoledPutString(toprint, 0 ,2*32,1);
+					if (chooser)
+					{
+					alarmflag = 0;
+					clearScreen0();
+					return 0;
+					}
+					else
+					{
 					interval_24 = 1;
 					clearScreen0();
 					return 0;
+					}
 				}
 				else if( currChoice == 2)
 				{
+					if (chooser)
+					{
+					alarmflag = 1;
+					clearScreen0();
+					return 0;
+					}
+					else
+					{
 					interval_24 = 0;
 					clearScreen0();
 					return 0;
+					}
 				}
 			}
 		
@@ -689,16 +732,10 @@ void digClock(time t, int alarMenu)
 			}
 		}
 	}
- /*
-		sprintf(timeprint, "%2d", Date.month);
-		ProtectoledPutString(timeprint, 2 ,2*30,1);
-		sprintf(timeprint, "%2d", Date.day);
-		ProtectoledPutString(timeprint, 2 ,2*20,1);  */
 }
 void setClock()
 {
 	time timetemp;
-	int currChoice=1;
 	int c =1;
 	timetemp.hour = Time.hour;
 	timetemp.minute = Time.minute;
@@ -826,98 +863,36 @@ int datecheck(date* t, int mode)
 	}
 	
 }
-void setDate()
+void setAlarmAndDate(int chooser)
 {
-		int dateprint;
-		date datemp;
-		int currChoice=1;
-		int c =1;
-		datemp.month = Date.month;
-		datemp.day = Date.day;
-		clearScreen0();
-		DelayMs(60);
-		while(1)
-		{
-			sprintf(toprint,"Set Date");
-    		ProtectoledPutString(toprint, 0, 0,1);  
-   			menuClock(Time);
-			
-			sprintf(dateprint, "%02d/", datemp.day);
-			WProtectoledPutString(dateprint, 2 ,2*15,1);
-			//sprintf(toprint,"/");
-			//ProtectoledPutString(toprint, 3 ,2*35,1);
-			sprintf(dateprint, "%02d", datemp.month);
-			WProtectoledPutString(dateprint, 2 ,2*39,1); 
-			sprintf(toprint,"=====");
-			switch(c)
-			{
-				case 0:
-				{
-					clearScreen0();
-					return 0;
-				}
-				case 1:
-				{
-					ProtectoledPutString(toprint, 6 ,13*2,1);
-					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datecheck(&datemp,1))    //Pressed up           
-						datemp.day++;	
-
-    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.day > 1) //Pressed down
- 						datemp.day--;
-					break;
-				}
-				case 2:
-				{
-					ProtectoledPutString(toprint, 6 ,37*2,1);
-					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 12)    //Pressed up           
-						datemp.month++;	
-					datecheck(&datemp,0);
-
-    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.month > 1) //Pressed down
- 						datemp.month--;
-					datecheck(&datemp,0);	
-					break;
-				}
-		
-				case 3:
-				{
-					Date.month = datemp.month;
-					Date.day = datemp.day;
-					clearScreen0();
-					return 0;
-				}
-			}
-			if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to return to main menu
-			{
-				c--;
-				clearScreenRow(6);
-			}
-		
-			if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
-			{
-				c++;
-				clearScreenRow(6);
-			}
-
- 			DelayMs(60);
-
-		}
-}
-void AlarMenu()
-{
-	time timetemp;
-	int currChoice=1;
 	int c =1;
+	time timetemp;
+	date datemp;
+	int dateprint;
+	datemp.month = Date.month;
+	datemp.day = Date.day;
 	timetemp.hour = Time.hour;
 	timetemp.minute = Time.minute;
 	clearScreen0();
 	DelayMs(60);
 	while(1)
 	{
-    	sprintf(toprint,"Set Alarm");
-    	ProtectoledPutString(toprint, 0, 0,1);  
+		if (chooser)
+		{
+			sprintf(toprint,"Set Date");
+    		ProtectoledPutString(toprint, 0, 0,1);  
+			sprintf(dateprint, "%02d/", datemp.day);
+			WProtectoledPutString(dateprint, 2 ,2*15,1);
+			sprintf(dateprint, "%02d", datemp.month);
+			WProtectoledPutString(dateprint, 2 ,2*39,1); 
+		}
+		else
+		{
+    		sprintf(toprint,"Set Alarm");
+			ProtectoledPutString(toprint, 0, 0,1);  
+			digClock(timetemp, 1);
+		}
    		menuClock(Time);
- 		digClock(timetemp, 1);
 		sprintf(toprint,"=====");			
 		switch(c)
 		{
@@ -929,29 +904,61 @@ void AlarMenu()
 			case 1:
 			{
 				ProtectoledPutString(toprint, 6 ,13*2,1);
+				if(chooser)
+				{
+					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datecheck(&datemp,1))    //Pressed up           
+						datemp.day++;	
+
+    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.day > 1) //Pressed down
+ 						datemp.day--;
+				}
+				else
+				{
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up           
 					timetemp.hour++;	
 
     			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.hour > 0) //Pressed down
  					timetemp.hour--;
+				}
 				break;
 			}
 			case 2:
 			{
 				ProtectoledPutString(toprint, 6 ,37*2,1);
+					if(chooser)
+				{
+					if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  datemp.month < 12)    //Pressed up           
+						datemp.month++;	
+					datecheck(&datemp,0);
+
+    				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && datemp.month > 1) //Pressed down
+ 						datemp.month--;
+					datecheck(&datemp,0);	
+				}
+				else
+				{
 				if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up           
 					timetemp.minute++;	
 
     			if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.minute > 0) //Pressed down
  					timetemp.minute--;	
+				}
 				break;
 			}
 		
 			case 3:
 			{
+				if (chooser)
+				{
+					Date.month = datemp.month;
+					Date.day = datemp.day;
+				}
+				else
+				{
 				Alarm.hour = timetemp.hour;
 				Alarm.minute = timetemp.minute;
 				alarmflag = 1;
+				}
 				clearScreen0();
 				return 0;
 			
@@ -977,13 +984,16 @@ void AlarMenu()
 
 
 }
+void setclockmode()
+{
+}
 void setTraverse(int c){
 	switch(c){
-		//case 1: subMenu1();break;
-		case 2: IntervalMenu();break;
+		case 1: setInterAndDis(1);break;
+		case 2: setInterAndDis(0);break;
 		case 3: setClock();break;
-		case 4: setDate();break;
-		case 5: AlarMenu();break;
+		case 4: setAlarmAndDate(1);break;
+		case 5: setAlarmAndDate(0);break;
 		default: break;
 	}
 }
