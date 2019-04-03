@@ -379,19 +379,6 @@ void WoledWriteCharRaw( char letter, int count)
 	return;
 }
 
-void WoledWriteCharRawR( char letter, int count )
-{
-	int i,c;
-	letter -= ' ';					// Adjust character to table that starts at 0x20
-	for(i = 0; i<=4 ; i++)
-		for(c=0 ; c<3;c++)
-			WriteData((VertExpand(~g_pucFont[letter][i])) >> count*8);
-
-		
-	//for(i=0;i<3;i++)
-	WriteData(0x00);					// Write 1 column for buffer to next character
-}
-
 
 void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,int count,...)
 {
@@ -404,11 +391,7 @@ void WoledWriteChar1x(char letter, unsigned char page, unsigned char column,int 
 	column += OFFSET-5;
 	WriteCommand(0x00+(column&0x0F));// adjusting where it starts in the page
 	WriteCommand(0x10 +((column>>4)&0x0F)); // doing spaces
-	
-	/*if(!flag)WoledWriteCharRawR( letter,count );
-	else 
-	WoledWriteCharRaw(letter, count) ;*/
-	/// THIS LINE IS MAKING ISSUES WITH THE DUPLICATION
+
 	return;
 }
 
@@ -430,22 +413,6 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 	pageTemp++;
 	}
 	pageTemp = page;
-	if(!flag)
-	{
-		while(*++ptr)
-		{
-			for(count = 0; count < 4 ; count++)
-			{
-				WoledWriteChar1x(*ptr,pageTemp,col+16*wordcount, count,flag);
-				WoledWriteCharRawR(*ptr, count);
-				pageTemp++;
-			}
-			pageTemp = page;
-			wordcount++;
-		}
-	}
-	else
-	{
 		while(*++ptr)
 		{
 			for(count = 0; count < 4 ; count++)
@@ -457,8 +424,7 @@ void WoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,...
 			pageTemp = page;
 			wordcount++;
 		}
-	}	
-}
+}	
 
 //////////////////////////// END BIG LETTERS////////////////////////////////
 
