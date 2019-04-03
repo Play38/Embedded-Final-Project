@@ -278,6 +278,7 @@ void YourHighPriorityISRCode()
         {
             Time.minute = 0;
             Time.hour++;
+			tickHour = 1;
         }
 
         if(Time.hour == 24)
@@ -668,6 +669,18 @@ void analClock()
 		ymtemp = cord[Time.minute][1]-(cord[Time.minute][1]-32)/5;
 		drawLine( 67, 32, xmtemp, ymtemp, thick );
 		tickMin = 0;
+	}
+	if(tickHour)
+	{	
+		if(onClock)
+		{
+			drawLine( 67, 32, xhtemp, yhtemp, thick );
+
+		}	
+		xhtemp = 67Ì+(cord[Time.hour*5][0]-67)/2;
+		yhtemp = 32Ì+(cord[Time.hour*5][1]-32)/2;
+		drawLine( 67, 32, xhtemp, yhtemp, thick );
+		tickHour = 0;
 	}
 	onClock = 1;
 }
@@ -1121,7 +1134,7 @@ void main(void)
     Date.day=1;
     Date.month=1;
     Time.second=1;
-    Time.minute=0;
+    Time.minute=10;
     Time.hour=0;
 
     T0CON = 0x07 ;
