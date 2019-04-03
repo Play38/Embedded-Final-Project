@@ -147,7 +147,7 @@ typedef struct {
 time Time;
 time Alarm;
 date Date;
-char xtemp,ytemp;
+char xhtemp,yhtemp,xmtemp,ymtemp;
 BOOL tickSec,tickMin,tickHour, onClock = 0;
 BOOL timeflag = 0;
 BOOL interval_24 = 1;
@@ -271,6 +271,7 @@ void YourHighPriorityISRCode()
         {
             Time.second = 0;
             Time.minute++;
+			tickMin = 1;
         }
 
         if(Time.minute == 60)
@@ -493,43 +494,6 @@ int CheckUDVolt(unsigned int x,unsigned int y) {
     else return 0;   //Not pushed
 }
 
-
-int GetAccVal(char c) { //Check the accelerometer's readings
-    /*
-    x: msb 3 lsb 2
-    y: msb 5 lsb 4
-    z: msb 7 lsb 6
-    */
-    BYTE msb,lsb;
-    BYTE mask= 0b10000000;
-    int signextend= 0xFC00;//2^15+2^14+2^13+2^12+2^11+2^10+2^9
-    int val=0,n1,n2;
-    if(c=='x') {
-        n1=3;
-        n2=2;
-    }
-    if(c=='y') {
-        n1=5;
-        n2=4;
-    }
-    if(c=='z') {
-        n1=7;
-        n2=6;
-    }
-    msb=BMA150_ReadByte(n1);
-    lsb=BMA150_ReadByte(n2);
-    lsb=lsb>>6;
-    val+=(int)msb;
-    val=val<<2;
-    val+=(int)lsb;
-    mask= mask&msb;
-    if(mask== 0b10000000) {
-        val|=signextend;
-    }
-    return val;
-}
-
-
 void clearScreen() {
     int i;
     for(i=1; i<8; i++) {
@@ -684,21 +648,28 @@ void analClock()
 	{	
 		if(onClock)
 		{
-			//drawLine( 66, 32, xtemp, ytemp, thick );
 			if(Time.second == 0)
-				drawLine( 66, 32, cord[59][0], cord[59][1], thin );	
+				drawLine( 67, 32, cord[59][0], cord[59][1], thin );	
 			else
-				drawLine( 66, 32, cord[Time.second-1][0], cord[Time.second-1][1], thin );
+				drawLine( 67, 32, cord[Time.second-1][0], cord[Time.second-1][1], thin );
 		}	
-		//xtemp = 66+(cord[Time.second][0]-66)/2;
-		//ytemp =  32+(cord[Time.second][1]-32)/2; hour
-		//drawLine( 66, 32, xtemp, ytemp, thick );
-		drawLine( 66, 32, cord[Time.second][0], cord[Time.second][1], thin );
-		onClock = 1;
+
+		drawLine( 67, 32, cord[Time.second][0], cord[Time.second][1], thin );
 		tickSec = 0;
 	}
-	
+	if(tickMin)
+	{	
+		if(onClock)
+		{
+			drawLine( 67, 32, xmtemp, ymtemp, thick );
 
+		}	
+		xmtemp = cord[Time.minute][0]-(cord[Time.minute][0]-67)/5;
+		ymtemp = cord[Time.minute][1]-(cord[Time.minute][1]-32)/5;
+		drawLine( 67, 32, xmtemp, ymtemp, thick );
+		tickMin = 0;
+	}
+	onClock = 1;
 }
 void digClock(time t, int alarMenu)
 {
@@ -1073,7 +1044,9 @@ void setMenu() //potenciometer
         if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
         {
             clearScreen0();
-			tickSec = 0;
+			tickSec = 1;
+			tickMin = 1;
+			tickHour = 1;
             return 0;
         }
         if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
