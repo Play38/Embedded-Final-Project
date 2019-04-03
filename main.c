@@ -1076,12 +1076,13 @@ int buttonCheck(void)
     {
         if(!(CheckButtonPressed()))
             return 0;
-        if(checkCount%5000 == 0)
+        if(checkCount%3000 == 0)
         {
             if(!(analogflag))
 			digClock(Time, 0);
 			else
-			{}
+				analClock();
+		
         }
     }
     return 1;
