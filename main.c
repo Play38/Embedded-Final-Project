@@ -645,6 +645,17 @@ void datePrint()
 }
 void analClock()
 {
+	if (!(onClock))
+	{
+		char xhand,yhand, i;
+		for(i=0;i<12;i++)
+		{
+			xhand = 67+(9*((cord[i*5][0]-67)/10));
+			yhand = 32+(9*((cord[i*5][1]-32)/10));
+			drawLine( xhand, yhand, cord[i*5][0], cord[i*5][1], thin );	
+		}
+		
+	}
 	if(tickSec)
 	{	
 		if(onClock)
