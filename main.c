@@ -568,7 +568,7 @@ void setInterAndDis(int chooser) //potenciometer
         pot = GetA2D();
         if(pot < 511)
             currChoice=1;
-        else if(pot > 511 && pot < 1023)
+        else if(pot > 511 && pot < 1024)
             currChoice=2;
         if(chooser)
         {
@@ -1055,7 +1055,7 @@ void setMenu() //potenciometer
             currChoice=3;
         else if(pot > 613 && pot < 818)
             currChoice=4;
-        else if(pot > 818 && pot < 1023)
+        else if(pot > 818 && pot < 1024)
             currChoice=5;
 
         sprintf(toprint, "Display Mode");
