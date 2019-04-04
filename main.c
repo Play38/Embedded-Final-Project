@@ -688,8 +688,8 @@ void analClock()
 			drawLine( 67, 32, xhtemp, yhtemp, thick );
 
 		}	
-		xhtemp = 67Ì+(cord[Time.hour*5][0]-67)/2;
-		yhtemp = 32Ì+(cord[Time.hour*5][1]-32)/2;
+		xhtemp = 67Ì+(cord[((Time.hour%12)*5)][0]-67)/2;
+		yhtemp = 32Ì+(cord[((Time.hour%12)*5)][1]-32)/2;
 		drawLine( 67, 32, xhtemp, yhtemp, thick );
 		tickHour = 0;
 	}
