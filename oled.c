@@ -10,8 +10,8 @@
     Software License Agreement:
     
     The software supplied herewith by Microchip Technology Incorporated
-    (the “Company”) for its PIC® Microcontroller is intended and
-    supplied to you, the Company’s customer, for use solely and
+    (the ï¿½Companyï¿½) for its PICï¿½ Microcontroller is intended and
+    supplied to you, the Companyï¿½s customer, for use solely and
     exclusively on Microchip PIC Microcontroller products. The
     software is owned by the Company and/or its supplier, and is
     protected under applicable copyright laws. All rights are reserved.
@@ -20,7 +20,7 @@
     civil liability for the breach of the terms and conditions of this
     license.
     
-    THIS SOFTWARE IS PROVIDED IN AN “AS IS” CONDITION. NO WARRANTIES,
+    THIS SOFTWARE IS PROVIDED IN AN ï¿½AS ISï¿½ CONDITION. NO WARRANTIES,
     WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
     TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
     PARTICULAR PURPOSE APPLY TO THIS SOFTWARE. THE COMPANY SHALL NOT,
@@ -443,7 +443,7 @@ ROM BYTE g_pucFont[95][5] =
     { 0x24, 0x2a, 0x7f, 0x2a, 0x12 }, // $   0x24
     { 0x23, 0x13, 0x08, 0x64, 0x62 }, // %   0x25
     { 0x36, 0x49, 0x55, 0x22, 0x50 }, // &   0x26
-    { 0x00, 0x05, 0x03, 0x00, 0x00 }, // '   0x27
+    { 0x06, 0x09, 0x09, 0x06, 0x00 }, // '   0x27 //alarm symbol
     { 0x00, 0x1c, 0x22, 0x41, 0x00 }, // (   0x28
     { 0x00, 0x41, 0x22, 0x1c, 0x00 }, // )   0x29
     { 0x14, 0x08, 0x3e, 0x08, 0x14 }, // *   0x2A

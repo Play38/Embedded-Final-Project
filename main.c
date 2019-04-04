@@ -657,8 +657,22 @@ void AMPM(time t)
     }
 
 }
+void alarmSymbol()
+{
+		if(alarmflag)
+        {
+            sprintf(toprint,"'");
+            ProtectoledPutString(toprint, 0 ,2*0,1);
+        }
+        else
+        {
+            sprintf(toprint," ");
+            ProtectoledPutString(toprint, 0, 2*0,1);
+        }
+}
 void analClock()
 {
+	alarmSymbol();
 	if (!(onClock))
 	{
 		char xhand,yhand, i;
@@ -1102,16 +1116,7 @@ void clockScreen()
     clearScreen0();
     while(1)
     {
-        if(alarmflag)
-        {
-            sprintf(toprint,"A");
-            ProtectoledPutString(toprint, 7 ,4*8,1);
-        }
-        else
-        {
-            sprintf(toprint," ");
-            ProtectoledPutString(toprint, 7, 4*8,1);
-        }
+      	alarmSymbol();
         datePrint();
 		if(!(analogflag))
 			digClock(Time, 0);
