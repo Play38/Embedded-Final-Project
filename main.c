@@ -527,9 +527,9 @@ void menuClock(time t)
     else
     {
         if(t.hour >12)
-            sprintf(timeprint, "%2d", ((t.hour + 1) % 13));
+            sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
         else
-            sprintf(timeprint, "%2d", (t.hour % 13));
+            sprintf(timeprint, "%02d", (t.hour % 13));
         ProtectoledPutString(timeprint, 0 ,2*40,1);
 
         if(t.hour>=0 && t.hour <=11)
@@ -558,9 +558,9 @@ void setInterAndDis(int chooser) //potenciometer
     while(1)
     {
         if (chooser)
-            sprintf(toprint,"Interval");
-        else
             sprintf(toprint,"Display");
+        else
+            sprintf(toprint,"Interval");
         ProtectoledPutString(toprint, 0, 0,1);
         menuClock(Time);
 
@@ -643,6 +643,20 @@ void datePrint()
     ProtectoledPutString(dateprint, 7 ,2*58,1);
 
 }
+void AMPM(time t)
+{
+	if(t.hour>=0 && t.hour <=11)
+    {
+    	sprintf(toprint,"AM");
+    	ProtectoledPutString(toprint, 7 ,2*0,1);
+    }
+    else
+    {
+    	sprintf(toprint,"PM");
+    	ProtectoledPutString(toprint, 7 ,2*0,1);
+    }
+
+}
 void analClock()
 {
 	if (!(onClock))
@@ -672,10 +686,8 @@ void analClock()
 	if(tickMin)
 	{	
 		if(onClock)
-		{
 			drawLine( 67, 32, xmtemp, ymtemp, thick );
-
-		}	
+	
 		xmtemp = cord[Time.minute][0]-(cord[Time.minute][0]-67)/5;
 		ymtemp = cord[Time.minute][1]-(cord[Time.minute][1]-32)/5;
 		drawLine( 67, 32, xmtemp, ymtemp, thick );
@@ -684,15 +696,15 @@ void analClock()
 	if(tickHour)
 	{	
 		if(onClock)
-		{
 			drawLine( 67, 32, xhtemp, yhtemp, thick );
-
-		}	
+	
 		xhtemp = 67Ì+(cord[((Time.hour%12)*5)][0]-67)/2;
 		yhtemp = 32Ì+(cord[((Time.hour%12)*5)][1]-32)/2;
 		drawLine( 67, 32, xhtemp, yhtemp, thick );
 		tickHour = 0;
 	}
+	
+	AMPM(Time);
 	onClock = 1;
 }
 void digClock(time t, int alarMenu)
@@ -720,16 +732,7 @@ void digClock(time t, int alarMenu)
                 sprintf(timeprint, "%02d:", (t.hour % 13));
             WProtectoledPutString(timeprint, 2 ,2*3,1);
 
-            if(t.hour>=0 && t.hour <=11)
-            {
-                sprintf(toprint,"AM");
-                ProtectoledPutString(toprint, 7 ,2*0,1);
-            }
-            else
-            {
-                sprintf(toprint,"PM");
-                ProtectoledPutString(toprint, 7 ,2*0,1);
-            }
+            AMPM(t);
         }
         //
     }
@@ -751,16 +754,8 @@ void digClock(time t, int alarMenu)
                 sprintf(timeprint, "%02d", (t.hour % 13));
             WProtectoledPutString(timeprint, 2 ,2*15,1);
 
-            if(t.hour>=0 && t.hour <=11)
-            {
-                sprintf(toprint,"AM");
-                ProtectoledPutString(toprint, 7 ,2*0,1);
-            }
-            else
-            {
-                sprintf(toprint,"PM");
-                ProtectoledPutString(toprint, 7 ,2*0,1);
-            }
+            AMPM(t);
+            
         }
     }
 }
@@ -775,7 +770,7 @@ void setClock()
     DelayMs(60);
     while(1)
     {
-        sprintf(toprint,"Set clock");
+        sprintf(toprint,"Set Time");
         ProtectoledPutString(toprint, 0, 0,1);
         menuClock(Time);
         digClock(timetemp, 0);
