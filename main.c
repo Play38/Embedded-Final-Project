@@ -513,10 +513,10 @@ void clearScreenRow(int i) {
 
 void longLRcheck()
 {
-	 while( CheckLRVolt(mTouchReadButton(RA3))) // L to return to main menu
+	 while( CheckLRVolt(mTouchReadButton(RA3)))
         {}
 
-        while( CheckLRVolt(mTouchReadButton(RA0))) // R to choose
+        while( CheckLRVolt(mTouchReadButton(RA0)))
 		{}
 }		
 void menuClock(time t)
@@ -600,13 +600,13 @@ void setInterAndDis(char chooser) //potenciometer
             else ProtectoledPutString(toprint, 2 ,2*6,1);
         }
 
-        if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+        if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to go back
         {
             clearScreen0();
 			longLRcheck();
             return 0;
         }
-        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to go right
         {
 			longLRcheck();
             if(currChoice == 1)
@@ -866,14 +866,14 @@ void setClock()
 
         }
 
-        if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to return to main menu
+        if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to go back
         {
             c--;
             clearScreenRow(6);
 			longLRcheck();
         }
 
-        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to go right
         {
             c++;
             clearScreenRow(6);
@@ -1041,14 +1041,14 @@ void setAlarmAndDate(char chooser)
         }
 
 
-        if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to return to main menu
+        if( CheckLRVolt(mTouchReadButton(RA3)) && c>=0 ) // L to go back
         {
             c--;
             clearScreenRow(6);
 			longLRcheck();
         }
 
-        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to go right
         {
             c++;
             clearScreenRow(6);
@@ -1110,7 +1110,7 @@ void setMenu() //potenciometer
         if(currChoice == 5)ProtectoledPutString(toprint, 5 ,2*6,0);
         else ProtectoledPutString(toprint, 5 ,2*6,1);
 
-        if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
+        if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to go back
         {
             clearScreen0();
 			tickSec = 1;
@@ -1118,7 +1118,7 @@ void setMenu() //potenciometer
 			tickHour = 1;
             return 0;
         }
-        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
+        if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to go right
             setTraverse(currChoice);
 
         DelayMs(60);
