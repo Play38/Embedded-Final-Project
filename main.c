@@ -441,7 +441,7 @@ static void InitializeSystem(void)
  * Note:            None
  *******************************************************************/
 static char toprint[24];
-void mainTraverse(int c);
+void mainTraverse(char c);
 
 void ProtectoledPutString(unsigned char *ptr,unsigned char page, unsigned char col,BOOL flag)
 {
@@ -526,7 +526,9 @@ void menuClock(time t)
     }
     else
     {
-        if(t.hour >12)
+		if(t.hour == 0)
+				sprintf(timeprint, "%02d:", 12);
+        else if(t.hour >12)
             sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
         else
             sprintf(timeprint, "%02d", (t.hour % 13));
@@ -549,10 +551,10 @@ void menuClock(time t)
     ProtectoledPutString(toprint, 0 ,2*46,1);
 
 }
-void setInterAndDis(int chooser) //potenciometer
+void setInterAndDis(char chooser) //potenciometer
 {
     int pot;
-    int currChoice=1;
+    char currChoice=1;
     clearScreen0();
     DelayMs(60);
     while(1)
@@ -740,7 +742,9 @@ void digClock(time t, int alarMenu)
         }
         else
         {
-            if(t.hour >12)
+			if(t.hour == 0)
+				sprintf(timeprint, "%02d:", 12);
+            else if(t.hour >12)
                 sprintf(timeprint, "%02d:", ((t.hour + 1) % 13));
             else
                 sprintf(timeprint, "%02d:", (t.hour % 13));
@@ -762,7 +766,9 @@ void digClock(time t, int alarMenu)
         }
         else
         {
-            if(t.hour >12)
+			if(t.hour == 0)
+				sprintf(timeprint, "%02d:", 12);
+            else if(t.hour >12)
                 sprintf(timeprint, "%02d", ((t.hour + 1) % 13));
             else
                 sprintf(timeprint, "%02d", (t.hour % 13));
@@ -776,7 +782,7 @@ void digClock(time t, int alarMenu)
 void setClock()
 {
     time timetemp;
-    int c =1;
+    char c =1;
     timetemp.hour = Time.hour;
     timetemp.minute = Time.minute;
     timetemp.second = Time.second;
@@ -799,32 +805,41 @@ void setClock()
         case 1:
         {
             ProtectoledPutString(toprint, 6 ,1*2,1);
-            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up
-                timetemp.hour++;
+            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up
+                timetemp.hour= (timetemp.hour +1)%24 ;
 
-            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.hour > 0) //Pressed down
-                timetemp.hour--;
+            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+                if(timetemp.hour == 0)
+					timetemp.hour = 23;
+				else
+					timetemp.hour--;
             break;
         }
         case 2:
         {
             ProtectoledPutString(toprint, 6 ,25*2,1);
-            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up
-                timetemp.minute++;
+            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up
+                timetemp.minute = (timetemp.minute +1)%60;
 
-            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.minute > 0) //Pressed down
-                timetemp.minute--;
+            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+                if(timetemp.minute == 0)
+					timetemp.minute = 59;
+				else
+					timetemp.minute--;
             break;
         }
 
         case 3:
         {
             ProtectoledPutString(toprint, 6 ,49*2,1);
-            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.second < 59)    //Pressed up
-                timetemp.second++;
+            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up
+                timetemp.second = (timetemp.second +1)%60;
 
-            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.second > 0) //Pressed down
-                timetemp.second--;
+            if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+                if(timetemp.second == 0)
+					timetemp.second = 59;
+				else
+					timetemp.second--;
 
             break;
         }
@@ -903,9 +918,9 @@ int datecheck(date* t, int mode)
     }
 
 }
-void setAlarmAndDate(int chooser)
+void setAlarmAndDate(char chooser)
 {
-    int c =1;
+    char c =1;
     time timetemp;
     date datemp;
     int dateprint;
@@ -954,11 +969,14 @@ void setAlarmAndDate(int chooser)
             }
             else
             {
-                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.hour < 24)    //Pressed up
-                    timetemp.hour++;
+                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up
+                    timetemp.hour= (timetemp.hour +1)%24 ;
 
-                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.hour > 0) //Pressed down
-                    timetemp.hour--;
+                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+                     if(timetemp.hour == 0)
+					timetemp.hour = 23;
+				else
+					timetemp.hour--;
             }
             break;
         }
@@ -977,11 +995,14 @@ void setAlarmAndDate(int chooser)
             }
             else
             {
-                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1 &&  timetemp.minute < 59)    //Pressed up
-                    timetemp.minute++;
+                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==1)    //Pressed up
+                    timetemp.minute= (timetemp.minute +1)%60 ;
 
-                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2 && timetemp.minute > 0) //Pressed down
-                    timetemp.minute--;
+                if( CheckUDVolt(mTouchReadButton(RA1),mTouchReadButton(RA2))==2) //Pressed down
+                    if(timetemp.minute == 0)
+						timetemp.minute = 59;
+					else
+						timetemp.minute--;
             }
             break;
         }
@@ -1024,7 +1045,7 @@ void setAlarmAndDate(int chooser)
 
 
 }
-void setTraverse(int c){
+void setTraverse(char c){
 	switch(c){
 		case 1: setInterAndDis(1);break;
 		case 2: setInterAndDis(0);break;
@@ -1037,7 +1058,7 @@ void setTraverse(int c){
 void setMenu() //potenciometer
 {
     int pot;
-    int currChoice=1;
+    char currChoice=1;
     clearScreen0();
     while(1)
     {
@@ -1111,7 +1132,7 @@ int buttonCheck(void)
 
 void clockScreen()
 {
-    int currChoice=1;
+    char currChoice=1;
     int pressCheck = 0;
     clearScreen0();
     while(1)
