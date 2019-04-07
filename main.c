@@ -510,6 +510,15 @@ void clearScreen0() {
 void clearScreenRow(int i) {
     oledPutROMString("                                 ", i, 0);
 }
+
+void longLRcheck()
+{
+	 while( CheckLRVolt(mTouchReadButton(RA3))) // L to return to main menu
+        {}
+
+        while( CheckLRVolt(mTouchReadButton(RA0))) // R to choose
+		{}
+}		
 void menuClock(time t)
 {
     int timeprint;
@@ -556,7 +565,7 @@ void setInterAndDis(char chooser) //potenciometer
     int pot;
     char currChoice=1;
     clearScreen0();
-    DelayMs(60);
+	longLRcheck();
     while(1)
     {
         if (chooser)
@@ -594,10 +603,12 @@ void setInterAndDis(char chooser) //potenciometer
         if( CheckLRVolt(mTouchReadButton(RA3)) ) // L to return to main menu
         {
             clearScreen0();
+			longLRcheck();
             return 0;
         }
         if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
         {
+			longLRcheck();
             if(currChoice == 1)
             {
                 if (chooser)
@@ -787,7 +798,7 @@ void setClock()
     timetemp.minute = Time.minute;
     timetemp.second = Time.second;
     clearScreen0();
-    DelayMs(60);
+    longLRcheck();
     while(1)
     {
         sprintf(toprint,"Set Time");
@@ -859,12 +870,14 @@ void setClock()
         {
             c--;
             clearScreenRow(6);
+			longLRcheck();
         }
 
         if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
         {
             c++;
             clearScreenRow(6);
+			longLRcheck();
         }
 
         DelayMs(60);
@@ -929,7 +942,7 @@ void setAlarmAndDate(char chooser)
     timetemp.hour = Time.hour;
     timetemp.minute = Time.minute;
     clearScreen0();
-    DelayMs(60);
+    longLRcheck();
     while(1)
     {
         if (chooser)
@@ -1032,12 +1045,14 @@ void setAlarmAndDate(char chooser)
         {
             c--;
             clearScreenRow(6);
+			longLRcheck();
         }
 
         if( CheckLRVolt(mTouchReadButton(RA0)) ) // R to choose
         {
             c++;
             clearScreenRow(6);
+			longLRcheck();
         }
 
         DelayMs(60);
